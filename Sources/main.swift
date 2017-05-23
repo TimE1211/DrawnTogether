@@ -3,8 +3,8 @@ import PerfectHTTP
 import PerfectHTTPServer
 import SQLiteStORM
 
-let connect = SQLiteConnect("./scoresdb")   //      ./=current folder       db = database
-let scores = Score(connect)
+let connect = SQLiteConnect("./pointsdb")
+let scores = Point(connect)
 scores.setup()
 
 let server = HTTPServer()

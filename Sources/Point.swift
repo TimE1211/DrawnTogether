@@ -10,11 +10,11 @@ import StORM
 import SQLiteStORM
 import PerfectLib
 
-class Point: PostgresStORM
+class Point: SQLiteStORM
 {
   
-  var x = 0
-  var y = 0
+  var x = 0.0
+  var y = 0.0
   
   override open func table() -> String
   {
@@ -33,7 +33,7 @@ class Point: PostgresStORM
     for i in 0..<self.results.rows.count
     {
       let point = Point()
-      row.to(self.results.rows[i])
+      point.to(self.results.rows[i])
       points.append(point)
     }
     return points
@@ -48,12 +48,5 @@ class Point: PostgresStORM
       print(error)
     }
   }
-  
-//  func asDictionary() -> [String: Any]
-//  {
-//    return [
-//      "point": self.point
-//    ]
-//  }
 }
 

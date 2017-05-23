@@ -15,8 +15,8 @@ func savePoint(request: HTTPRequest, _ response: HTTPResponse)
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-  guard let xValue = Int(request.param(name: "x")!),
-    let yValue = Int(request.param(name: "y")!) else
+  guard let xValue = Double(request.param(name: "x")!),
+    let yValue = Double(request.param(name: "y")!) else
   {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
