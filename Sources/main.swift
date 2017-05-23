@@ -1,6 +1,11 @@
 import PerfectLib
 import PerfectHTTP
 import PerfectHTTPServer
+import SQLiteStORM
+
+let connect = SQLiteConnect("./scoresdb")   //      ./=current folder       db = database
+let scores = Score(connect)
+scores.setup()
 
 let server = HTTPServer()
 server.serverPort = 8080
@@ -37,6 +42,9 @@ routes.add(method: .post, uri: "post", handler: {
   }
   returnJSON(message: "Hello \(name)", response: response)
 })
+
+routes.add(method: .post, uri: "/savePoint", handler: savePoint)
+routes.add(method: .get, uri: "/savePoint", handler: getPoint)
 
 server.addRoutes(routes)
 
