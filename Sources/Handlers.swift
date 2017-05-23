@@ -10,13 +10,19 @@ import PerfectHTTP
 import SQLiteStORM
 import StORM
 
-func sendPoint(request: HTTPRequest, _ response: HTTPResponse)
+func sendLine(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-  guard let xValue = Double(request.param(name: "x")!),
-    let yValue = Double(request.param(name: "y")!) else
+  if let body = request.postBodyString
+  {
+    print(body)
+  }
+  guard let startx = request.param(name: "startx"),
+    let starty = request.param(name: "starty"),
+    let endx = request.param(name: "endx"),
+    let endy = request.param(name: "endy") else
   {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
@@ -31,13 +37,15 @@ func sendPoint(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let point = Point(connect)
-  point.x = xValue
-  point.y = yValue
+  let line = Line(connect)
+  line.startx = startx
+  line.starty = starty
+  line.endx = endx
+  line.endy = endy
   
   do {
-    try point.save()
-    responseDictionary["error"] = "Point saved."
+    try line.save()
+    responseDictionary["error"] = "Line saved."
   } catch
   {
     print(error)
@@ -54,28 +62,30 @@ func sendPoint(request: HTTPRequest, _ response: HTTPResponse)
   response.completed()
 }
 
-func getPoint(request: HTTPRequest, _ response: HTTPResponse)
+func getLine(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
   var responseDictionary = [String: Any]()
   
-  let points = Point(connect)
+  let lines = Line(connect)
   let cursor = StORMCursor(limit: 10, offset: 0)
   
   do {
-    try points.select(columns: ["x", "y"], whereclause: "point > :1", params: [0], orderby: ["point DESC"], cursor: cursor)
+    try lines.select(columns: ["x", "y"], whereclause: "line > :1", params: [0], orderby: ["line DESC"], cursor: cursor)
     var resultArray = [[String: Any]]()
     
-    for row in points.rows()
+    for row in lines.rows()
     {
       var aPointDictionary = [String: Any]()
-      aPointDictionary["x"] = row.x
-      aPointDictionary["y"] = row.y
+      aPointDictionary["startx"] = row.startx
+      aPointDictionary["starty"] = row.starty
+      aPointDictionary["endx"] = row.endx
+      aPointDictionary["endy"] = row.endy
       resultArray.append(aPointDictionary)
     }
     
-    responseDictionary["points"] = resultArray
+    responseDictionary["lines"] = resultArray
   } catch
   {
     print(error)

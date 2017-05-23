@@ -4,7 +4,7 @@ import PerfectHTTPServer
 import SQLiteStORM
 
 let connect = SQLiteConnect("./pointsdb")
-let scores = Point(connect)
+let scores = Line(connect)
 scores.setup()
 
 let server = HTTPServer()
@@ -18,7 +18,8 @@ routes.add(method: .get, uri: "/", handler: {
   .completed()
 })
 
-func returnJSON(message: String, response: HTTPResponse) {
+func returnJSON(message: String, response: HTTPResponse)
+{
   do {
     try response.setBody(json: ["message": message])
     .setHeader(.contentType, value: "application/json")
@@ -31,20 +32,20 @@ func returnJSON(message: String, response: HTTPResponse) {
 
 routes.add(method: .get, uri: "/hello", handler: {
   request, response in
-  returnJSON(message: "Hello, JSON!", response: response)
+  returnJSON(message: "Hello, Welcome to DrawnTogether!", response: response)
 })
 
-routes.add(method: .post, uri: "post", handler: {
-  request, response in
-  guard let name = request.param(name: "name") else {
-    response.completed(status: .badRequest)
-    return
-  }
-  returnJSON(message: "Hello \(name)", response: response)
-})
+//routes.add(method: .post, uri: "post", handler: {
+//  request, response in
+//  guard let name = request.param(name: "name") else {
+//    response.completed(status: .badRequest)
+//    return
+//  }
+//  returnJSON(message: "Hello \(name)", response: response)
+//})
 
-routes.add(method: .post, uri: "/savePoint", handler: sendPoint)
-routes.add(method: .get, uri: "/getStartingPoint", handler: getPoint)
+routes.add(method: .post, uri: "/sendLine", handler: sendLine)
+routes.add(method: .get, uri: "/getLine", handler: getLine)
 
 server.addRoutes(routes)
 
