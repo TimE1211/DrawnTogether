@@ -10,7 +10,7 @@ import PerfectHTTP
 import SQLiteStORM
 import StORM
 
-func savePoint(request: HTTPRequest, _ response: HTTPResponse)
+func sendPoint(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
