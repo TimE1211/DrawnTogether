@@ -63,42 +63,15 @@ func getLine(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-//  var responseDictionary = [String: Any]()
-  
-  let getObj = Line(connect)    //changed line to getObj
+  let getObj = Line(connect)
 
-  //let cursor = StORMCursor(limit: 10, offset: 0)
-//
-//  do {
-//    try //lines.select(columns: ["startx", "starty","endx","endy"], whereclause: "line > :1", params: [0], orderby: ["line DESC"], cursor: cursor)
-//    lines.select(columns: ["startx", "starty", "endx", "endy"], whereclause: "line > :1", params: [0], orderby: ["line DESC"])
-//    var resultArray = [[String: Any]]()
-//    
-//    for row in lines.rows()
-//    {
-//      var aLineDictionary = [String: Any]()
-//      aLineDictionary["startx"] = row.startx
-//      aLineDictionary["starty"] = row.starty
-//      aLineDictionary["endx"] = row.endx
-//      aLineDictionary["endy"] = row.endy
-//      resultArray.append(aLineDictionary)
-//    }
-//    
-//    responseDictionary["lines"] = resultArray
-//  } catch
-//  {
-//    print("Couldnt set JSON Dictionary correctly: \(error)")
-//  }
-//  
   do {
-//    new here
     try getObj.findAll()
-    var lines: [[String: Any]] = []
-    for row in getObj.rows()
-    {
-      lines.append(row.asDictionary())
+    
+    let lines = getObj.rows().map {
+      $0.asDictionary()
     }
-//    old here
+    
     try response.setBody(json: lines)
       .completed()
   } catch
