@@ -46,11 +46,18 @@ class Line: SQLiteStORM
   {
     do {
       try sqlExec("CREATE TABLE IF NOT EXISTS Scores (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
-//      try sqlExec("CREATE TABLE IF NOT EXISTS Points (startx STRING PRIMARY KEY AUTOINCREMENT NOT NULL, starty STRING, endx STRING, endy STRING)")
     } catch
     {
       print(error)
     }
   }
+  
+//  init(dictionary: [String: Any])
+//  {
+//    startx = dictionary["startx"] as! String
+//    starty = dictionary["starty"] as! String
+//    endx = dictionary["endx"] as! String
+//    endy = dictionary["endy"] as! String
+//  }
 }
 

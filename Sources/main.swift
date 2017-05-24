@@ -3,7 +3,7 @@ import PerfectHTTP
 import PerfectHTTPServer
 import SQLiteStORM
 
-let connect = SQLiteConnect("./pointsdb")
+let connect = SQLiteConnect("./linesdb")
 let scores = Line(connect)
 scores.setup()
 
@@ -35,14 +35,14 @@ routes.add(method: .get, uri: "/hello", handler: {
   returnJSON(message: "Hello, Welcome to DrawnTogether!", response: response)
 })
 
-//routes.add(method: .post, uri: "post", handler: {
-//  request, response in
-//  guard let name = request.param(name: "name") else {
-//    response.completed(status: .badRequest)
-//    return
-//  }
-//  returnJSON(message: "Hello \(name)", response: response)
-//})
+routes.add(method: .post, uri: "post", handler: {
+  request, response in
+  guard let name = request.param(name: "name") else {
+    response.completed(status: .badRequest)
+    return
+  }
+  returnJSON(message: "Hello \(name)", response: response)
+})
 
 routes.add(method: .post, uri: "/sendLine", handler: sendLine)
 routes.add(method: .get, uri: "/getLine", handler: getLine)
