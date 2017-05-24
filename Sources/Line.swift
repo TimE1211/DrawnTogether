@@ -61,5 +61,15 @@ class Line: SQLiteStORM
 //    endx = dictionary["endx"] as! String
 //    endy = dictionary["endy"] as! String
 //  }
+  
+  func asDictionary() -> [String: Any]
+  {
+    return [
+      "startx": self.startx,
+      "starty": self.starty,
+      "endx": self.endx,
+      "endy": self.endy
+    ]
+  }
 }
 

@@ -16,17 +16,6 @@ func sendLine(request: HTTPRequest, _ response: HTTPResponse)
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-//  if let body = request.postBodyString
-//  {
-//    print(body)
-//    parse json
-//    let dictionary = parseJSON(request as! Data)
-//    let line = Line.init(dictionary: dictionary!)
-//    read in dictionary as line obj
-//    array of line obj
-//    store in sqlite
-//  }
-  
   guard let startx = request.param(name: "startx"),
     let starty = request.param(name: "starty"),
     let endx = request.param(name: "endx"),
@@ -74,7 +63,7 @@ func getLine(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  var responseDictionary = [String: Any]()
+//  var responseDictionary = [String: Any]()
   
   let getObj = Line(connect)    //changed line to getObj
 
@@ -110,7 +99,7 @@ func getLine(request: HTTPRequest, _ response: HTTPResponse)
       lines.append(row.asDictionary())
     }
 //    old here
-    try response.setBody(json: responseDictionary)
+    try response.setBody(json: lines)
       .completed()
   } catch
   {
@@ -120,25 +109,4 @@ func getLine(request: HTTPRequest, _ response: HTTPResponse)
   }
   
 }
-
-//func parseJSON(_ data: Data) -> [String: Any]?
-//{
-//  do
-//  {
-//    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-//    if let dictionary = json as? [String: Any]
-//    {
-//      return dictionary
-//    }
-//    else
-//    {
-//      return nil
-//    }
-//  }
-//  catch
-//  {
-//    print(error)
-//    return nil
-//  }
-//}
 
