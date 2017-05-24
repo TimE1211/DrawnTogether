@@ -16,15 +16,16 @@ func sendLine(request: HTTPRequest, _ response: HTTPResponse)
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-  if let body = request.postBodyString
-  {
+//  if let body = request.postBodyString
+//  {
+//    print(body)
 //    parse json
 //    let dictionary = parseJSON(request as! Data)
 //    let line = Line.init(dictionary: dictionary!)
 //    read in dictionary as line obj
 //    array of line obj
 //    store in sqlite
-  }
+//  }
   
   guard let startx = request.param(name: "startx"),
     let starty = request.param(name: "starty"),
@@ -38,7 +39,7 @@ func sendLine(request: HTTPRequest, _ response: HTTPResponse)
       try response.setBody(json: responseDictionary)
     }catch
     {
-      print(error)
+      print("JSON submission Error: \(error)")
     }
     response.completed()
     return
@@ -53,9 +54,10 @@ func sendLine(request: HTTPRequest, _ response: HTTPResponse)
   do {
     try line.save()
     responseDictionary["error"] = "Line saved."
+    print(responseDictionary["error"]!)
   } catch
   {
-    print(error)
+    print("Saving Error: \(error)")
     responseDictionary["error"] = String(describing: error)
   }
   
@@ -63,16 +65,10 @@ func sendLine(request: HTTPRequest, _ response: HTTPResponse)
     try response.setBody(json: responseDictionary)
   } catch
   {
-    print(error)
+    print("Response Error: \(error)")
   }
-  
   response.completed()
 }
-
-
-
-
-
 
 func getLine(request: HTTPRequest, _ response: HTTPResponse)
 {
@@ -80,59 +76,69 @@ func getLine(request: HTTPRequest, _ response: HTTPResponse)
   
   var responseDictionary = [String: Any]()
   
-  let lines = Line(connect)
-  let cursor = StORMCursor(limit: 10, offset: 0)
-  
+  let getObj = Line(connect)    //changed line to getObj
+
+  //let cursor = StORMCursor(limit: 10, offset: 0)
+//
+//  do {
+//    try //lines.select(columns: ["startx", "starty","endx","endy"], whereclause: "line > :1", params: [0], orderby: ["line DESC"], cursor: cursor)
+//    lines.select(columns: ["startx", "starty", "endx", "endy"], whereclause: "line > :1", params: [0], orderby: ["line DESC"])
+//    var resultArray = [[String: Any]]()
+//    
+//    for row in lines.rows()
+//    {
+//      var aLineDictionary = [String: Any]()
+//      aLineDictionary["startx"] = row.startx
+//      aLineDictionary["starty"] = row.starty
+//      aLineDictionary["endx"] = row.endx
+//      aLineDictionary["endy"] = row.endy
+//      resultArray.append(aLineDictionary)
+//    }
+//    
+//    responseDictionary["lines"] = resultArray
+//  } catch
+//  {
+//    print("Couldnt set JSON Dictionary correctly: \(error)")
+//  }
+//  
   do {
-    try lines.select(columns: ["x", "y"], whereclause: "line > :1", params: [0], orderby: ["line DESC"], cursor: cursor)
-    var resultArray = [[String: Any]]()
-    
-    for row in lines.rows()
+//    new here
+    try getObj.findAll()
+    var lines: [[String: Any]] = []
+    for row in getObj.rows()
     {
-      var aPointDictionary = [String: Any]()
-      aPointDictionary["startx"] = row.startx
-      aPointDictionary["starty"] = row.starty
-      aPointDictionary["endx"] = row.endx
-      aPointDictionary["endy"] = row.endy
-      resultArray.append(aPointDictionary)
+      lines.append(row.asDictionary())
     }
-    
-    responseDictionary["lines"] = resultArray
-  } catch
-  {
-    print(error)
-  }
-  
-  do {
+//    old here
     try response.setBody(json: responseDictionary)
+      .completed()
   } catch
   {
-    print(error)
+    print("Couldnt send responseDictionary: \(error)")
+    response.setBody(string: "Couldnt send responseDictionary: \(error)")
+      .completed(status: .internalServerError)
   }
-  response.completed()
+  
 }
 
-
-
-
-func parseJSON(_ data: Data) -> [String: Any]?
-{
-  do
-  {
-    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-    if let dictionary = json as? [String: Any]
-    {
-      return dictionary
-    }
-    else
-    {
-      return nil
-    }
-  }
-  catch
-  {
-    print(error)
-    return nil
-  }
-}
+//func parseJSON(_ data: Data) -> [String: Any]?
+//{
+//  do
+//  {
+//    let json = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+//    if let dictionary = json as? [String: Any]
+//    {
+//      return dictionary
+//    }
+//    else
+//    {
+//      return nil
+//    }
+//  }
+//  catch
+//  {
+//    print(error)
+//    return nil
+//  }
+//}
 

@@ -1,5 +1,5 @@
 //
-//  Points.swift
+//  Line.swift
 //  DrawnTogether
 //
 //  Created by Timothy Hang on 5/21/17.
@@ -12,6 +12,7 @@ import PerfectLib
 
 class Line: SQLiteStORM
 {
+  var id = 0
   var startx = "0"
   var starty = "0"
   var endx = "0"
@@ -24,6 +25,7 @@ class Line: SQLiteStORM
 
   override func to(_ this: StORMRow)
   {
+    id = this.data["id"] as? Int ?? 0
     startx = this.data["startx"] as! String
     starty = this.data["starty"] as! String
     endx = this.data["endx"] as! String
@@ -45,7 +47,7 @@ class Line: SQLiteStORM
   override public func setup()
   {
     do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS Scores (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
+      try sqlExec("CREATE TABLE IF NOT EXISTS Lines (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
     } catch
     {
       print(error)
