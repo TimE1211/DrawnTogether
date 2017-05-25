@@ -10,7 +10,7 @@ import StORM
 import SQLiteStORM
 import PerfectLib
 
-class Line: SQLiteStORM
+class Project: SQLiteStORM
 {
   var id = 0
   var startx = "0"
@@ -20,7 +20,7 @@ class Line: SQLiteStORM
   
   override open func table() -> String
   {
-    return "Lines"
+    return "Projects"
   }
 
   override func to(_ this: StORMRow)
@@ -32,22 +32,22 @@ class Line: SQLiteStORM
     endy = this.data["endy"] as! String
   }
   
-  func rows() -> [Line]
+  func rows() -> [Project]
   {
-    var lines = [Line]()
+    var projects = [Project]()
     for i in 0..<self.results.rows.count
     {
-      let line = Line()
-      line.to(self.results.rows[i])
-      lines.append(line)
+      let project = Project()
+      project.to(self.results.rows[i])
+      projects.append(project)
     }
-    return lines
+    return projects
   }
 
   override public func setup()
   {
     do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS Lines (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
+      try sqlExec("CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
     } catch
     {
       print(error)

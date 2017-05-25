@@ -11,7 +11,7 @@ import SQLiteStORM
 import StORM
 import Foundation
 
-func sendLine(request: HTTPRequest, _ response: HTTPResponse)
+func sendProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
@@ -34,15 +34,15 @@ func sendLine(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let line = Line(connect)
-  line.startx = startx
-  line.starty = starty
-  line.endx = endx
-  line.endy = endy
+  let project = Project(connect)
+  project.startx = startx
+  project.starty = starty
+  project.endx = endx
+  project.endy = endy
   
   do {
-    try line.save()
-    responseDictionary["error"] = "Line saved."
+    try project.save()
+    responseDictionary["error"] = "Project saved."
     print(responseDictionary["error"]!)
   } catch
   {
@@ -59,20 +59,20 @@ func sendLine(request: HTTPRequest, _ response: HTTPResponse)
   response.completed()
 }
 
-func getLine(request: HTTPRequest, _ response: HTTPResponse)
+func getProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = Line(connect)
+  let getObj = Project(connect)
 
   do {
     try getObj.findAll()
     
-    let lines = getObj.rows().map {
+    let projects = getObj.rows().map {
       $0.asDictionary()
     }
     
-    try response.setBody(json: lines)
+    try response.setBody(json: projects)
       .completed()
   } catch
   {
@@ -80,6 +80,15 @@ func getLine(request: HTTPRequest, _ response: HTTPResponse)
     response.setBody(string: "Couldnt send responseDictionary: \(error)")
       .completed(status: .internalServerError)
   }
+}
+
+func sendUser(request: HTTPRequest, _ response: HTTPResponse)
+{
+  
+}
+
+func getUser(request: HTTPRequest, _ response: HTTPResponse)
+{
   
 }
 

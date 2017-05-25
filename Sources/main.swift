@@ -4,8 +4,8 @@ import PerfectHTTPServer
 import SQLiteStORM
 import PerfectNotifications
 
-let connect = SQLiteConnect("./linesdb")
-let scores = Line(connect)
+let connect = SQLiteConnect("./projectsdb")
+let scores = Project(connect)
 scores.setup()
 
 let server = HTTPServer()
@@ -45,9 +45,10 @@ routes.add(method: .post, uri: "post", handler: {
   returnJSON(message: "Hello \(name)", response: response)
 })
 
-routes.add(method: .post, uri: "/sendLine", handler: sendLine)
-routes.add(method: .get, uri: "/getLine", handler: getLine)
-routes.add(method: .get, uri: "/getUser", handler: getLine)
+routes.add(method: .post, uri: "/sendProject", handler: sendProject)
+routes.add(method: .get, uri: "/getProject", handler: getProject)
+routes.add(method: .post, uri: "/sendUser", handler: sendUser)
+routes.add(method: .get, uri: "/getUser", handler: getUser)
 
 server.addRoutes(routes)
 
