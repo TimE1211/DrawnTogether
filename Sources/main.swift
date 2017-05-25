@@ -5,8 +5,8 @@ import SQLiteStORM
 import PerfectNotifications
 
 let connect = SQLiteConnect("./projectsdb")
-let scores = Project(connect)
-scores.setup()
+let lines = Line(connect)
+lines.setup()
 
 let server = HTTPServer()
 server.serverPort = 8080

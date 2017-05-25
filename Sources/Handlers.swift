@@ -34,7 +34,7 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let project = Project(connect)
+  let project = Line(connect)
   project.startx = startx
   project.starty = starty
   project.endx = endx
@@ -63,7 +63,7 @@ func getProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = Project(connect)
+  let getObj = Line(connect)
 
   do {
     try getObj.findAll()
