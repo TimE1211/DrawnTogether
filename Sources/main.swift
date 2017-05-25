@@ -2,6 +2,7 @@ import PerfectLib
 import PerfectHTTP
 import PerfectHTTPServer
 import SQLiteStORM
+import PerfectNotifications
 
 let connect = SQLiteConnect("./linesdb")
 let scores = Line(connect)
@@ -46,6 +47,7 @@ routes.add(method: .post, uri: "post", handler: {
 
 routes.add(method: .post, uri: "/sendLine", handler: sendLine)
 routes.add(method: .get, uri: "/getLine", handler: getLine)
+routes.add(method: .get, uri: "/getUser", handler: getLine)
 
 server.addRoutes(routes)
 
