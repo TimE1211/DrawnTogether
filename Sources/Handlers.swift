@@ -17,14 +17,14 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-//  let json = JSON(request.postParams)
-//  print(json)
-//  
-//  let params = request.postParams
-  guard let projectUUID = request.param(name:"projectUUID"),
-  let name = request.param(name:"name"),
-  let users = request.param(name:"users"),
-  let lines = request.param(name:"lines")
+  let json = JSON(request.postBodyString!)
+  
+  let params = request.postParams
+  print(params)
+  guard let projectUUID = json["projectUUID"].string,
+    let name = json["name"].string,
+    let users = json["users"].array,
+    let lines = json["lines"].array
     else
   {
     response.status = .badRequest
@@ -45,23 +45,27 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
   project.projectUUID = projectUUID
   project.name = name
   
+  //  project.users = users
+  //  project.lines = lines
+  //  if let usersArray = users.
+  //  {
+  var usersArray = [User]()
+  for userDict in users
+  {
+    usersArray
+    let user = User.init(userDictionary: userDict)
+    users.append(user)
+  }
   project.users = users
-  project.lines = lines
-//  if let usersArray = users as? [[String: Any]] {
-//    var users = [User]()
-//    for userDict in usersArray {
-//      
-//    }
-//    project.users = users
-//  }
-//  
-//  if let linesArray = lines as? [[String: Any]] {
-//    var lines = [Line]()
-//    for lineDict in linesArray {
-//      // make line object
-//    }
-//    project.lines = lines
-//  }
+  //  }
+  
+  //  if let linesArray = lines as? [[String: Any]] {
+  //    var lines = [Line]()
+  //    for lineDict in linesArray {
+  //      // make line object
+  //    }
+  //    project.lines = lines
+  //  }
   
   do {
     try project.save()
@@ -87,7 +91,7 @@ func getProject(request: HTTPRequest, _ response: HTTPResponse)
   response.setHeader(.contentType, value: "application/json")
   
   let getObj = Project(connect)
-
+  
   do {
     try getObj.findAll()
     
