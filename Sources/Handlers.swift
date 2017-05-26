@@ -45,28 +45,22 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
   project.projectUUID = projectUUID
   project.name = name
   
-  //  project.users = users
-  //  project.lines = lines
-  //  if let usersArray = users.
-  //  {
   var usersArray = [User]()
   for userDict in users
   {
-    usersArray
-    let user = User.init(userDictionary: userDict)
-    users.append(user)
+    let user = User(userDictionary: userDict.dictionaryValue)
+    usersArray.append(user)
   }
-  project.users = users
-  //  }
+  project.users = usersArray
   
-  //  if let linesArray = lines as? [[String: Any]] {
-  //    var lines = [Line]()
-  //    for lineDict in linesArray {
-  //      // make line object
-  //    }
-  //    project.lines = lines
-  //  }
-  
+  var linesArray = [Line]()
+  for lineDict in lines
+  {
+    let line = Line(lineDictionary: lineDict.dictionaryValue)
+    linesArray.append(line)
+  }
+  project.users = usersArray
+
   do {
     try project.save()
     responseDictionary["error"] = "Project saved."
@@ -95,9 +89,7 @@ func getProject(request: HTTPRequest, _ response: HTTPResponse)
   do {
     try getObj.findAll()
     
-    let projects = getObj.rows().map {
-      $0.asDictionary()
-    }
+    let projects = getObj.rows().map{ $0.asDictionary()}
     
     try response.setBody(json: projects)
       .completed()
@@ -118,4 +110,3 @@ func getUser(request: HTTPRequest, _ response: HTTPResponse)
 {
   
 }
-

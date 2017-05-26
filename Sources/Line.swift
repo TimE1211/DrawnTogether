@@ -17,10 +17,11 @@ class Line: SQLiteStORM
   var starty = "0"
   var endx = "0"
   var endy = "0"
+  var projectId = ""
   
   override open func table() -> String
   {
-    return "Lines"
+    return "linesTable"
   }
 
   override func to(_ this: StORMRow)
@@ -30,6 +31,26 @@ class Line: SQLiteStORM
     starty = this.data["starty"] as! String
     endx = this.data["endx"] as! String
     endy = this.data["endy"] as! String
+  }
+  
+  override init()
+  {
+    super.init()
+    id = 0
+    startx = "0"
+    starty = "0"
+    endx = "0"
+    endy = "0"
+  }
+  
+  init(lineDictionary: [String: Any])
+  {
+    super.init()
+    id = lineDictionary["id"] as? Int ?? 0
+    startx = lineDictionary["startx"] as! String
+    starty = lineDictionary["starty"] as! String
+    endx = lineDictionary["endx"] as! String
+    endy = lineDictionary["endy"] as! String
   }
   
   func rows() -> [Line]
@@ -44,16 +65,16 @@ class Line: SQLiteStORM
     return lines
   }
 
-  override public func setup()
-  {
-    do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS Lines (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
-      //users INTEGER FOREIGN KEY
-    } catch
-    {
-      print(error)
-    }
-  }
+//  override public func setup()
+//  {
+//    do {
+//      try sqlExec("CREATE TABLE IF NOT EXISTS lines_table (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT, projectId TEXT NOT NULL)")
+//      //users INTEGER FOREIGN KEY
+//    } catch
+//    {
+//      print("LineTable: \(error)")
+//    }
+//  }
   
   func asDictionary() -> [String: Any]
   {
