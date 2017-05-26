@@ -46,9 +46,10 @@ routes.add(method: .post, uri: "post", handler: {
   returnJSON(message: "Hello \(name)", response: response)
 })
 
-routes.add(method: .post, uri: "/sendProject", handler: sendProject)
+routes.add(method: .post, uri: "/saveProject", handler: saveProject)
+routes.add(method: .post, uri: "/saveLine", handler: saveLine)
 routes.add(method: .get, uri: "/getProject", handler: getProject)
-routes.add(method: .post, uri: "/sendUser", handler: sendUser)
+routes.add(method: .post, uri: "/saveUser", handler: saveUser)
 routes.add(method: .get, uri: "/getUser", handler: getUser)
 
 server.addRoutes(routes)

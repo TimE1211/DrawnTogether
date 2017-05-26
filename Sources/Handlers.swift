@@ -12,7 +12,7 @@ import StORM
 import Foundation
 import SwiftyJSON
 
-func sendProject(request: HTTPRequest, _ response: HTTPResponse)
+func saveProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
@@ -26,27 +26,23 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
     let name = json["name"].string,
     let user1 = json["user1"].string,
     let user2 = json["user2"].string,
-    let lines = json["lines"].array
-    else
-  {
+    let lines = json["lines"].array else {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
-    
-    do {
-      try response.setBody(json: responseDictionary)
-    }catch
-    {
-      print("JSON submission Error: \(error)")
-    }
-    response.completed()
-    return
+      do {
+        try response.setBody(json: responseDictionary)
+      }catch
+      {
+        print("JSON submission Error: \(error)")
+      }
+      response.completed()
+      return
   }
   
   let project = Project(connect)
   
   project.projectUUID = projectUUID
   project.name = name
-
   project.user1 = user1
   project.user2 = user2
   
@@ -86,20 +82,45 @@ func getProject(request: HTTPRequest, _ response: HTTPResponse)
   
   do {
     try getObj.findAll()
-    
     let projects = getObj.rows().map{ $0.asDictionary()}
-    
     try response.setBody(json: projects)
       .completed()
   } catch
   {
-    print("Couldnt send responseDictionary: \(error)")
-    response.setBody(string: "Couldnt send responseDictionary: \(error)")
+    print("Couldnt save responseDictionary: \(error)")
+    response.setBody(string: "Couldnt save responseDictionary: \(error)")
       .completed(status: .internalServerError)
   }
 }
 
-func sendUser(request: HTTPRequest, _ response: HTTPResponse)
+func saveLine(request: HTTPRequest, _ response: HTTPResponse)
+{
+  response.setHeader(.contentType, value: "application/json")
+  var responseDictionary = [String: String]()
+  guard let startx = request.param(name: "startx"),
+    let starty = request.param(name: "starty"),
+    let endx = request.param(name: "endx"),
+    let endy = request.param(name: "endy") else {
+    response.status = .badRequest
+    responseDictionary["error"] = "Please supply values"
+    return
+  }
+  let line = Line(connect)
+  line.startx = startx
+  line.starty = starty
+  line.endx = endx
+  line.endy = endy
+  do {
+    try line.save()
+    responseDictionary["error"] = "Line saved."
+    print(responseDictionary["error"]!)
+  } catch
+  {
+    response.completed()
+  }
+}
+
+func saveUser(request: HTTPRequest, _ response: HTTPResponse)
 {
   
 }
