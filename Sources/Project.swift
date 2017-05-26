@@ -14,21 +14,19 @@ class Project: SQLiteStORM
 {
   var projectUUID = ""
   var name = ""
-  var user1 = ""
-  var user2 = ""
+  var users = [User]()
   var lines = [Line]()
   
   override open func table() -> String
   {
-    return "projectsTable"
+    return "projects_table"
   }
   
   override func to(_ this: StORMRow)
   {
     projectUUID = this.data["projectUUID"] as! String
     name = this.data["name"] as! String
-    user1 = this.data["user1"] as! String
-    user2 = this.data["user2"] as! String
+    users = this.data["users"] as! [User]
     lines = this.data["lines"] as! [Line]
   }
   
@@ -47,7 +45,7 @@ class Project: SQLiteStORM
   override public func setup()
   {
     do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS projects_table (projectUUID TEXT PRIMARY KEY NOT NULL, name TEXT, user1 TEXT NOT NULL, user2 TEXT NOT NULL")
+      try sqlExec("CREATE TABLE IF NOT EXISTS projects_table (projectUUID TEXT PRIMARY KEY NOT NULL, name TEXT, users TEXT NOT NULL, FOREIGN KEY (users) REFERENCES users(username), lines INTEGER NOT NULL, FOREIGN KEY (lines) REFERENCES lines(id))")
     } catch
     {
       print("ProjectTable: \(error)")
@@ -59,8 +57,7 @@ class Project: SQLiteStORM
     return [
       "projectUUID": self.projectUUID,
       "name": self.name,
-      "user1": self.user1,
-      "user2": self.user2,
+      "users": self.users,
       "lines": self.lines
     ]
   }

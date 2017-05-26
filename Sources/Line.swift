@@ -17,7 +17,6 @@ class Line: SQLiteStORM
   var starty = "0"
   var endx = "0"
   var endy = "0"
-  var projectId = ""
   
   override open func table() -> String
   {
@@ -65,16 +64,16 @@ class Line: SQLiteStORM
     return lines
   }
 
-//  override public func setup()
-//  {
-//    do {
-//      try sqlExec("CREATE TABLE IF NOT EXISTS lines_table (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT, projectId TEXT NOT NULL)")
-//      //users INTEGER FOREIGN KEY
-//    } catch
-//    {
-//      print("LineTable: \(error)")
-//    }
-//  }
+  override public func setup()
+  {
+    do {
+      try sqlExec("CREATE TABLE IF NOT EXISTS lines_table (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
+      //users INTEGER FOREIGN KEY
+    } catch
+    {
+      print("LineTable: \(error)")
+    }
+  }
   
   func asDictionary() -> [String: Any]
   {
