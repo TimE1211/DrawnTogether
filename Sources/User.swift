@@ -27,6 +27,20 @@ class User: SQLiteStORM
     password = this.data["password"] as! String
   }
   
+  override init()
+  {
+    super.init()
+    username = ""
+    password = ""
+  }
+  
+  init(userDictionary: [String: Any])
+  {
+    super.init()
+    username = userDictionary["username"] as! String
+    password = userDictionary["password"] as! String
+  }
+  
   func rows() -> [User]
   {
     var users = [User]()

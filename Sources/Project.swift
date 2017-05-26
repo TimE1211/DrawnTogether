@@ -12,10 +12,10 @@ import PerfectLib
 
 class Project: SQLiteStORM
 {
-  var projectUUID: String
-  var name: String
-  var users: [User] = []
-  var lines: [Line] = []
+  var projectUUID = ""
+  var name = ""
+  var users = [User]()
+  var lines = [Line]()
   
   override open func table() -> String
   {
@@ -24,11 +24,10 @@ class Project: SQLiteStORM
   
   override func to(_ this: StORMRow)
   {
-    projectUUID = this.data["projectUUID"] as? Int ?? 0
-    startx = this.data["startx"] as! String
-    starty = this.data["starty"] as! String
-    endx = this.data["endx"] as! String
-    endy = this.data["endy"] as! String
+    projectUUID = this.data["projectUUID"] as! String
+    name = this.data["name"] as! String
+    users = this.data["users"] as! [User]
+    lines = this.data["lines"] as! [Line]
   }
   
   func rows() -> [Project]
@@ -46,8 +45,7 @@ class Project: SQLiteStORM
   override public func setup()
   {
     do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS Projects (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
-      //users INTEGER FOREIGN KEY
+      try sqlExec("CREATE TABLE IF NOT EXISTS Projects (projectUUID TEXT PRIMARY KEY NOT NULL, name TEXT, users TEXT FOREIGN KEY, lines INTEGER FOREIGN KEY)")
     } catch
     {
       print(error)
@@ -57,10 +55,10 @@ class Project: SQLiteStORM
   func asDictionary() -> [String: Any]
   {
     return [
-      "startx": self.startx,
-      "starty": self.starty,
-      "endx": self.endx,
-      "endy": self.endy
+      "projectUUID": self.projectUUID,
+      "name": self.name,
+      "users": self.users,
+      "lines": self.lines
     ]
   }
 }

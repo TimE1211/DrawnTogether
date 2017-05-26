@@ -10,16 +10,22 @@ import PerfectHTTP
 import SQLiteStORM
 import StORM
 import Foundation
+import SwiftyJSON
 
 func sendProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-  guard let startx = request.param(name: "startx"),
-    let starty = request.param(name: "starty"),
-    let endx = request.param(name: "endx"),
-    let endy = request.param(name: "endy") else
+//  let json = JSON(request.postParams)
+//  print(json)
+//  
+//  let params = request.postParams
+  guard let projectUUID = request.param(name:"projectUUID"),
+  let name = request.param(name:"name"),
+  let users = request.param(name:"users"),
+  let lines = request.param(name:"lines")
+    else
   {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
@@ -34,11 +40,28 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let project = Line(connect)
-  project.startx = startx
-  project.starty = starty
-  project.endx = endx
-  project.endy = endy
+  let project = Project(connect)
+  
+  project.projectUUID = projectUUID
+  project.name = name
+  
+  project.users = users
+  project.lines = lines
+//  if let usersArray = users as? [[String: Any]] {
+//    var users = [User]()
+//    for userDict in usersArray {
+//      
+//    }
+//    project.users = users
+//  }
+//  
+//  if let linesArray = lines as? [[String: Any]] {
+//    var lines = [Line]()
+//    for lineDict in linesArray {
+//      // make line object
+//    }
+//    project.lines = lines
+//  }
   
   do {
     try project.save()
@@ -63,7 +86,7 @@ func getProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = Line(connect)
+  let getObj = Project(connect)
 
   do {
     try getObj.findAll()

@@ -11,7 +11,7 @@
       "package": "PerfectCURL",
       "reason": null,
       "repositoryURL": "https://github.com/PerfectlySoft/Perfect-CURL.git",
-      "version": "2.0.7"
+      "version": "2.1.0"
     },
     {
       "package": "PerfectCrypto",
@@ -62,24 +62,6 @@
       "version": "2.0.10"
     },
     {
-      "package": "PerfectXML",
-      "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-XML.git",
-      "version": "2.0.5"
-    },
-    {
-      "package": "PostgreSQL",
-      "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-PostgreSQL.git",
-      "version": "2.0.2"
-    },
-    {
-      "package": "PostgresStORM",
-      "reason": null,
-      "repositoryURL": "https://github.com/SwiftORM/Postgres-StORM.git",
-      "version": "1.0.10"
-    },
-    {
       "package": "SQLite",
       "reason": null,
       "repositoryURL": "https://github.com/PerfectlySoft/Perfect-SQLite.git",
@@ -110,22 +92,16 @@
       "version": "0.9.1"
     },
     {
+      "package": "SwiftyJSON",
+      "reason": null,
+      "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
+      "version": "3.1.4"
+    },
+    {
       "package": "cURL",
       "reason": null,
       "repositoryURL": "https://github.com/PerfectlySoft/Perfect-libcurl.git",
       "version": "2.0.3"
-    },
-    {
-      "package": "libpq",
-      "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-libpq.git",
-      "version": "2.0.0"
-    },
-    {
-      "package": "libxml2",
-      "reason": null,
-      "repositoryURL": "https://github.com/PerfectlySoft/Perfect-libxml2.git",
-      "version": "2.0.1"
     }
   ],
   "version": 1
