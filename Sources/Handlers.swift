@@ -18,12 +18,14 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
   var responseDictionary = [String: String]()
   
   let json = JSON(request.postBodyString!)
+  print(json)
   
   let params = request.postParams
   print(params)
   guard let projectUUID = json["projectUUID"].string,
     let name = json["name"].string,
-    let users = json["users"].array,
+    let user1 = json["user1"].string,
+    let user2 = json["user2"].string,
     let lines = json["lines"].array
     else
   {
@@ -44,22 +46,18 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
   
   project.projectUUID = projectUUID
   project.name = name
-  
-  var usersArray = [User]()
-  for userDict in users
-  {
-    let user = User(userDictionary: userDict.dictionaryValue)
-    usersArray.append(user)
-  }
-  project.users = usersArray
+
+  project.user1 = user1
+  project.user2 = user2
   
   var linesArray = [Line]()
   for lineDict in lines
   {
-    let line = Line(lineDictionary: lineDict.dictionaryValue)
+    let line = Line()
+    line.Dictionary(lineDictionary: lineDict.dictionary!)
     linesArray.append(line)
   }
-  project.users = usersArray
+  project.lines = linesArray
 
   do {
     try project.save()

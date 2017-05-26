@@ -42,10 +42,9 @@ class Line: SQLiteStORM
 //    endx = "0"
 //    endy = "0"
 //  }
-  
-  init(lineDictionary: [String: Any])
+//  
+  func Dictionary(lineDictionary: [String: Any])
   {
-    super.init()
     id = lineDictionary["id"] as? Int ?? 0
     startx = lineDictionary["startx"] as! String
     starty = lineDictionary["starty"] as! String
@@ -58,7 +57,7 @@ class Line: SQLiteStORM
     var lines = [Line]()
     for i in 0..<self.results.rows.count
     {
-      let line = Line?
+      let line = Line()
       line.to(self.results.rows[i])
       lines.append(line)
     }
