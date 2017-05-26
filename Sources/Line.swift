@@ -17,6 +17,7 @@ class Line: SQLiteStORM
   var starty = "0"
   var endx = "0"
   var endy = "0"
+  var projectId = ""
   
   override open func table() -> String
   {
@@ -32,15 +33,15 @@ class Line: SQLiteStORM
     endy = this.data["endy"] as! String
   }
   
-  override init()
-  {
-    super.init()
-    id = 0
-    startx = "0"
-    starty = "0"
-    endx = "0"
-    endy = "0"
-  }
+//  override init()
+//  {
+//    super.init()
+//    id = 0
+//    startx = "0"
+//    starty = "0"
+//    endx = "0"
+//    endy = "0"
+//  }
   
   init(lineDictionary: [String: Any])
   {
@@ -57,23 +58,23 @@ class Line: SQLiteStORM
     var lines = [Line]()
     for i in 0..<self.results.rows.count
     {
-      let line = Line()
+      let line = Line?
       line.to(self.results.rows[i])
       lines.append(line)
     }
     return lines
   }
 
-  override public func setup()
-  {
-    do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS lines_table (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
-      //users INTEGER FOREIGN KEY
-    } catch
-    {
-      print("LineTable: \(error)")
-    }
-  }
+//  override public func setup()
+//  {
+//    do {
+//      try sqlExec("CREATE TABLE IF NOT EXISTS lines_table (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT, projectId TEXT NOT NULL)")
+//      //users INTEGER FOREIGN KEY
+//    } catch
+//    {
+//      print("LineTable: \(error)")
+//    }
+//  }
   
   func asDictionary() -> [String: Any]
   {

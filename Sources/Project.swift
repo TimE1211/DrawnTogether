@@ -14,19 +14,21 @@ class Project: SQLiteStORM
 {
   var projectUUID = ""
   var name = ""
-  var users = [User]()
+  var user1 = ""
+  var user2 = ""
   var lines = [Line]()
   
   override open func table() -> String
   {
-    return "projects_table"
+    return "projectsTable"
   }
   
   override func to(_ this: StORMRow)
   {
     projectUUID = this.data["projectUUID"] as! String
     name = this.data["name"] as! String
-    users = this.data["users"] as! [User]
+    user1 = this.data["user1"] as! String
+    user2 = this.data["user2"] as! String
     lines = this.data["lines"] as! [Line]
   }
   
@@ -42,22 +44,23 @@ class Project: SQLiteStORM
     return projects
   }
   
-  override public func setup()
-  {
-    do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS projects_table (projectUUID TEXT PRIMARY KEY NOT NULL, name TEXT, users TEXT NOT NULL, FOREIGN KEY (users) REFERENCES users(username), lines INTEGER NOT NULL, FOREIGN KEY (lines) REFERENCES lines(id))")
-    } catch
-    {
-      print("ProjectTable: \(error)")
-    }
-  }
+//  override public func setup()
+//  {
+//    do {
+//      try sqlExec("CREATE TABLE IF NOT EXISTS projects_table (projectUUID TEXT PRIMARY KEY NOT NULL, name TEXT, user1 TEXT NOT NULL, user2 TEXT NOT NULL")
+//    } catch
+//    {
+//      print("ProjectTable: \(error)")
+//    }
+//  }
   
   func asDictionary() -> [String: Any]
   {
     return [
       "projectUUID": self.projectUUID,
       "name": self.name,
-      "users": self.users,
+      "user1": self.user1,
+      "user2": self.user2,
       "lines": self.lines
     ]
   }

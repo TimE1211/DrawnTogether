@@ -6,7 +6,8 @@ import PerfectNotifications
 
 let connect = SQLiteConnect("./projectsdb")
 let projects = Project(connect)
-projects.setup()
+let lines = Line(connect)
+let users = User(connect)
 
 let server = HTTPServer()
 server.serverPort = 8080

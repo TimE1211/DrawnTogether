@@ -15,6 +15,7 @@ class User: SQLiteStORM
 {
   var username = ""
   var password = ""
+  var projectID = ""
 
   override open func table() -> String
   {
@@ -53,15 +54,15 @@ class User: SQLiteStORM
     return users
   }
   
-  override public func setup()
-  {
-    do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS users_table (username TEXT PRIMARY KEY NOT NULL, password TEXT)")
-    } catch
-    {
-      print("UserTable: \(error)")
-    }
-  }
+//  override public func setup()
+//  {
+//    do {
+//      try sqlExec("CREATE TABLE IF NOT EXISTS users_table (username TEXT PRIMARY KEY NOT NULL, password TEXT)")
+//    } catch
+//    {
+//      print("UserTable: \(error)")
+//    }
+//  }
   
   func asDictionary() -> [String: Any]
   {
