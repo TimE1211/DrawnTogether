@@ -33,7 +33,7 @@ class Line: SQLiteStORM
     endy = this.data["endy"] as! String
   }
 
-  func asDictionary(lineDictionary: [String: Any])
+  func asDictionaryFrom(lineDictionary: [String: Any])
   {
     id = lineDictionary["id"] as? Int ?? 0
     startx = lineDictionary["startx"] as! String

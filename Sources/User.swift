@@ -27,7 +27,7 @@ class User: SQLiteStORM
     password = this.data["password"] as! String
   }
   
-  func asDictionary(userDictionary: [String: Any])
+  func asDictionaryFrom(userDictionary: [String: Any])
   {
     username = userDictionary["username"] as! String
     password = userDictionary["password"] as! String

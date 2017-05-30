@@ -20,22 +20,23 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   let json = JSON(request.postBodyString!)
   print(json)
   
-  let params = request.postParams
-  print(params)
+  //  let params = request.postParams
+  //  print(params)
   guard let projectUUID = json["projectUUID"].string,
     let projectName = json["projectName"].string,
     let users = json["users"].array,
-    let lines = json["lines"].array else {
+    let lines = json["lines"].array else
+  {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
-      do {
-        try response.setBody(json: responseDictionary)
-      }catch
-      {
-        print("JSON submission Error: \(error)")
-      }
-      response.completed()
-      return
+    do {
+      try response.setBody(json: responseDictionary)
+    }catch
+    {
+      print("JSON submission Error: \(error)")
+    }
+    response.completed()
+    return
   }
   
   let project = Project(connect)
@@ -47,7 +48,7 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   for userDict in users
   {
     let user = User()
-    user.asDictionary(userDictionary: userDict.dictionary!)
+    user.asDictionaryFrom(userDictionary: userDict.dictionary!)
     usersArray.append(user)
   }
   project.users = usersArray
@@ -56,11 +57,11 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   for lineDict in lines
   {
     let line = Line()
-    line.asDictionary(lineDictionary: lineDict.dictionary!)
+    line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
     linesArray.append(line)
   }
   project.lines = linesArray
-
+  
   do {
     try project.save()
     responseDictionary["error"] = "Project saved."
@@ -84,13 +85,32 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
-  guard let username = request.param(name: "username"),
-    let password = request.param(name: "password") else {
-      response.status = .badRequest
-      responseDictionary["error"] = "Please supply values"
-      return
+  
+  let json = JSON(request.postBodyString!)
+  print(json)
+  
+  //  let params = request.postParams
+  //  print(params)
+  //
+  //  guard let username = request.param(name: "username"),
+  //    let password = request.param(name: "password") else
+  guard let username = json["username"].string,
+    let password = json["password"].string else
+  {
+    response.status = .badRequest
+    responseDictionary["error"] = "Please supply values"
+    do {
+      try response.setBody(json: responseDictionary)
+    }catch
+    {
+      print("JSON submission Error: \(error)")
+    }
+    response.completed()
+    return
   }
+  
   let user = User(connect)
+  
   user.username = username
   user.password = password
   do {

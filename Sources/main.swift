@@ -9,6 +9,7 @@ let connect = SQLiteConnect("./projectsdb")
 let projects = Project(connect)
 let lines = Line(connect)
 let users = User(connect)
+//SQLiteConnector.db = "./projectsdb"
 
 let projectSetup = Project()
 try? projectSetup.setup()
