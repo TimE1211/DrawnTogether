@@ -38,7 +38,7 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let project = Project()
+  let project = Project(connect)
   
   project.projectUUID = projectUUID
   project.projectName = projectName
@@ -87,7 +87,6 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
   
   guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
     let json = JSON(data: dataFromString)
-//  let json = JSON(request.postBodyString!)
   
   print(json)
   
@@ -107,7 +106,7 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let user = User()
+  let user = User(connect)
   
   user.username = username
   user.password = password
@@ -115,8 +114,10 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
     try user.save()
     responseDictionary["error"] = "User saved."
     print("responseDict: \(responseDictionary["error"]!)")
+    response.completed()
   } catch
   {
+    responseDictionary["error"] = "Couldn't save User \(error)."
     response.completed()
   }
 }
@@ -125,7 +126,7 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = Project()
+  let getObj = Project(connect)
   
   do {
     try getObj.findAll()
@@ -144,7 +145,7 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = User()
+  let getObj = User(connect)
   
   do {
     try getObj.findAll()

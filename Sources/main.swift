@@ -2,22 +2,21 @@ import PerfectLib
 import PerfectHTTP
 import PerfectHTTPServer
 import SQLiteStORM
-import PerfectNotifications
 
-//let connect = SQLiteConnect("./projectdb")
+let connect = SQLiteConnect("./projectdb")
 //
 //let projects = Project(connect)
 //let lines = Line(connect)
 //let users = User(connect)
-SQLiteConnector.db = "./projectsdb"
+//SQLiteConnector.db = "./projectsdb"
 
-let projectSetup = Project()
+let projectSetup = Project(connect)
 try? projectSetup.setup()
 
-let userSetup = User()
+let userSetup = User(connect)
 try? userSetup.setup()
 
-let lineSetup = Line()
+let lineSetup = Line(connect)
 try? lineSetup.setup()
 
 let server = HTTPServer()
