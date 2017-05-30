@@ -38,7 +38,7 @@ class Project: SQLiteStORM
     var projects = [Project]()
     for i in 0..<self.results.rows.count
     {
-      let project = Project()
+      let project = Project(connect)
       project.to(self.results.rows[i])
       projects.append(project)
     }
@@ -57,13 +57,13 @@ class Project: SQLiteStORM
   
   public func getLines() -> [Line]
   {
-    let _lines = Line()
+    let _lines = Line(connect)
     return _lines.rows()
   }
   
   public func getUsers() -> [User]
   {
-    let users = User()
+    let users = User(connect)
     return users.rows()
   }
 }
