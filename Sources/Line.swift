@@ -32,18 +32,8 @@ class Line: SQLiteStORM
     endx = this.data["endx"] as! String
     endy = this.data["endy"] as! String
   }
-  
-//  override init()
-//  {
-//    super.init()
-//    id = 0
-//    startx = "0"
-//    starty = "0"
-//    endx = "0"
-//    endy = "0"
-//  }
-//  
-  func Dictionary(lineDictionary: [String: Any])
+
+  func asDictionary(lineDictionary: [String: Any])
   {
     id = lineDictionary["id"] as? Int ?? 0
     startx = lineDictionary["startx"] as! String
@@ -64,17 +54,6 @@ class Line: SQLiteStORM
     return lines
   }
 
-//  override public func setup()
-//  {
-//    do {
-//      try sqlExec("CREATE TABLE IF NOT EXISTS lines_table (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT, projectId TEXT NOT NULL)")
-//      //users INTEGER FOREIGN KEY
-//    } catch
-//    {
-//      print("LineTable: \(error)")
-//    }
-//  }
-  
   func asDictionary() -> [String: Any]
   {
     return [

@@ -23,9 +23,8 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   let params = request.postParams
   print(params)
   guard let projectUUID = json["projectUUID"].string,
-    let name = json["name"].string,
-    let user1 = json["user1"].string,
-    let user2 = json["user2"].string,
+    let projectName = json["projectName"].string,
+    let users = json["users"].array,
     let lines = json["lines"].array else {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
@@ -42,15 +41,22 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   let project = Project(connect)
   
   project.projectUUID = projectUUID
-  project.name = name
-  project.user1 = user1
-  project.user2 = user2
+  project.projectName = projectName
+  
+  var usersArray = [User]()
+  for userDict in users
+  {
+    let user = User()
+    user.asDictionary(userDictionary: userDict.dictionary!)
+    usersArray.append(user)
+  }
+  project.users = usersArray
   
   var linesArray = [Line]()
   for lineDict in lines
   {
     let line = Line()
-    line.Dictionary(lineDictionary: lineDict.dictionary!)
+    line.asDictionary(lineDictionary: lineDict.dictionary!)
     linesArray.append(line)
   }
   project.lines = linesArray
@@ -76,29 +82,20 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
 
 func saveUser(request: HTTPRequest, _ response: HTTPResponse)
 {
-  
-}
-
-func saveLine(request: HTTPRequest, _ response: HTTPResponse)
-{
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
-  guard let startx = request.param(name: "startx"),
-    let starty = request.param(name: "starty"),
-    let endx = request.param(name: "endx"),
-    let endy = request.param(name: "endy") else {
+  guard let username = request.param(name: "username"),
+    let password = request.param(name: "password") else {
       response.status = .badRequest
       responseDictionary["error"] = "Please supply values"
       return
   }
-  let line = Line(connect)
-  line.startx = startx
-  line.starty = starty
-  line.endx = endx
-  line.endy = endy
+  let user = User(connect)
+  user.username = username
+  user.password = password
   do {
-    try line.save()
-    responseDictionary["error"] = "Line saved."
+    try user.save()
+    responseDictionary["error"] = "User saved."
     print(responseDictionary["error"]!)
   } catch
   {
@@ -119,18 +116,28 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
       .completed()
   } catch
   {
-    print("Couldnt save responseDictionary: \(error)")
-    response.setBody(string: "Couldnt save responseDictionary: \(error)")
+    print("Couldnt set response Body for projects: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
       .completed(status: .internalServerError)
   }
 }
 
 func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
+  response.setHeader(.contentType, value: "application/json")
   
+  let getObj = User(connect)
+  
+  do {
+    try getObj.findAll()
+    let users = getObj.rows().map{ $0.asDictionary()}
+    try response.setBody(json: users)
+      .completed()
+  } catch
+  {
+    print("Couldnt set response Body for users: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
+  }
 }
 
-func getLines(request: HTTPRequest, _ response: HTTPResponse)
-{
-  
-}

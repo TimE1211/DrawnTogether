@@ -5,9 +5,19 @@ import SQLiteStORM
 import PerfectNotifications
 
 let connect = SQLiteConnect("./projectsdb")
+
 let projects = Project(connect)
 let lines = Line(connect)
 let users = User(connect)
+
+let projectSetup = Project()
+try? projectSetup.setup()
+
+let userSetup = User()
+try? userSetup.setup()
+
+//let lineSetup = Line()
+//try? lineSetup.setup()
 
 let server = HTTPServer()
 server.serverPort = 8080
@@ -48,10 +58,8 @@ routes.add(method: .post, uri: "post", handler: {
 
 routes.add(method: .post, uri: "/saveProject", handler: saveProject)
 routes.add(method: .post, uri: "/saveUser", handler: saveUser)
-routes.add(method: .post, uri: "/saveLine", handler: saveLine)
 routes.add(method: .get, uri: "/getProjects", handler: getProjects)
 routes.add(method: .get, uri: "/getUsers", handler: getUsers)
-routes.add(method: .get, uri: "/getLines", handler: getLines)
 
 server.addRoutes(routes)
 
