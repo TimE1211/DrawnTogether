@@ -12,24 +12,22 @@ import StORM
 import Foundation
 import SwiftyJSON
 
-func sendProject(request: HTTPRequest, _ response: HTTPResponse)
+func saveProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-//  let json = JSON(request.postParams)
-//  print(json)
-//  
-//  let params = request.postParams
-  guard let projectUUID = request.param(name:"projectUUID"),
-  let name = request.param(name:"name"),
-  let users = request.param(name:"users"),
-  let lines = request.param(name:"lines")
-    else
+  let json = JSON(request.postBodyString!)
+  print(json)
+  
+  guard let projectUUID = json["projectUUID"].string,
+    let projectName = json["projectName"].string,
+    let users = json["users"].array,
+    let lines = json["lines"].array else
   {
     response.status = .badRequest
-    responseDictionary["error"] = "Please supply values"
-    
+    responseDictionary["error"] = "Please supply project values"
+    print(responseDictionary["error"]!)
     do {
       try response.setBody(json: responseDictionary)
     }catch
@@ -40,28 +38,28 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let project = Project(connect)
+  let project = Project()
   
   project.projectUUID = projectUUID
-  project.name = name
+  project.projectName = projectName
   
-  project.users = users
-  project.lines = lines
-//  if let usersArray = users as? [[String: Any]] {
-//    var users = [User]()
-//    for userDict in usersArray {
-//      
-//    }
-//    project.users = users
-//  }
-//  
-//  if let linesArray = lines as? [[String: Any]] {
-//    var lines = [Line]()
-//    for lineDict in linesArray {
-//      // make line object
-//    }
-//    project.lines = lines
-//  }
+  var usersArray = [User]()
+  for userDict in users
+  {
+    let user = User()
+    user.asDictionaryFrom(userDictionary: userDict.dictionary!)
+    usersArray.append(user)
+  }
+  project.users = usersArray
+  
+  var linesArray = [Line]()
+  for lineDict in lines
+  {
+    let line = Line()
+    line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
+    linesArray.append(line)
+  }
+  project.lines = linesArray
   
   do {
     try project.save()
@@ -82,36 +80,83 @@ func sendProject(request: HTTPRequest, _ response: HTTPResponse)
   response.completed()
 }
 
-func getProject(request: HTTPRequest, _ response: HTTPResponse)
+func saveUser(request: HTTPRequest, _ response: HTTPResponse)
+{
+  response.setHeader(.contentType, value: "application/json")
+  var responseDictionary = [String: String]()
+  
+  guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
+    let json = JSON(data: dataFromString)
+//  let json = JSON(request.postBodyString!)
+  
+  print(json)
+  
+  guard let username = json["username"].string,
+    let password = json["password"].string else
+  {
+    response.status = .badRequest
+    responseDictionary["error"] = "Please supply user values"
+    print(responseDictionary["error"]!)
+    do {
+      try response.setBody(json: responseDictionary)
+    }catch
+    {
+      print("JSON submission Error: \(error)")
+    }
+    response.completed()
+    return
+  }
+  
+  let user = User()
+  
+  user.username = username
+  user.password = password
+  do {
+    try user.save()
+    responseDictionary["error"] = "User saved."
+    print("responseDict: \(responseDictionary["error"]!)")
+  } catch
+  {
+    response.completed()
+  }
+}
+
+func getProjects(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = Project(connect)
-
+  let getObj = Project()
+  
   do {
     try getObj.findAll()
-    
-    let projects = getObj.rows().map {
-      $0.asDictionary()
-    }
-    
+    let projects = getObj.rows().map{ $0.asDictionary()}
     try response.setBody(json: projects)
       .completed()
   } catch
   {
-    print("Couldnt send responseDictionary: \(error)")
-    response.setBody(string: "Couldnt send responseDictionary: \(error)")
+    print("Couldnt set response Body for projects: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
       .completed(status: .internalServerError)
   }
 }
 
-func sendUser(request: HTTPRequest, _ response: HTTPResponse)
+func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
+  response.setHeader(.contentType, value: "application/json")
   
-}
-
-func getUser(request: HTTPRequest, _ response: HTTPResponse)
-{
+  let getObj = User()
   
+  do {
+    try getObj.findAll()
+    let users = getObj.rows().map{ $0.asDictionary()}
+    print(users)
+    try response.setBody(json: users)
+      .completed()
+  } catch
+  {
+    print("Couldnt set response Body for users: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
+  }
 }
 

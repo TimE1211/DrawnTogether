@@ -12,20 +12,20 @@ import PerfectLib
 
 class Line: SQLiteStORM
 {
-  var id = 0
+  var projectUUID = ""
   var startx = "0"
   var starty = "0"
   var endx = "0"
   var endy = "0"
   
-  override open func table() -> String
-  {
-    return "Lines"
-  }
+//  override open func table() -> String
+//  {
+//    return "linesTable"
+//  }
 
   override func to(_ this: StORMRow)
   {
-    id = this.data["id"] as? Int ?? 0
+    projectUUID = this.data["projectUUID"] as! String
     startx = this.data["startx"] as! String
     starty = this.data["starty"] as! String
     endx = this.data["endx"] as! String
@@ -43,21 +43,20 @@ class Line: SQLiteStORM
     }
     return lines
   }
-
-  override public func setup()
-  {
-    do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS Lines (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, startx TEXT, starty TEXT, endx TEXT, endy TEXT)")
-      //users INTEGER FOREIGN KEY
-    } catch
-    {
-      print(error)
-    }
-  }
   
+  func asDictionaryFrom(lineDictionary: [String: Any])
+  {
+    projectUUID = lineDictionary["projectUUID"] as! String
+    startx = lineDictionary["startx"] as! String
+    starty = lineDictionary["starty"] as! String
+    endx = lineDictionary["endx"] as! String
+    endy = lineDictionary["endy"] as! String
+  }
+
   func asDictionary() -> [String: Any]
   {
     return [
+      "projectUUID": self.projectUUID,
       "startx": self.startx,
       "starty": self.starty,
       "endx": self.endx,

@@ -15,30 +15,16 @@ class User: SQLiteStORM
 {
   var username = ""
   var password = ""
-
-  override open func table() -> String
-  {
-    return "Users"
-  }
+//
+//  override open func table() -> String
+//  {
+//    return "usersTable"
+//  }
   
   override func to(_ this: StORMRow)
   {
     username = this.data["username"] as! String
     password = this.data["password"] as! String
-  }
-  
-  override init()
-  {
-    super.init()
-    username = ""
-    password = ""
-  }
-  
-  init(userDictionary: [String: Any])
-  {
-    super.init()
-    username = userDictionary["username"] as! String
-    password = userDictionary["password"] as! String
   }
   
   func rows() -> [User]
@@ -53,16 +39,12 @@ class User: SQLiteStORM
     return users
   }
   
-  override public func setup()
+  func asDictionaryFrom(userDictionary: [String: Any])
   {
-    do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS Users (username TEXT PRIMARY KEY NOT NULL, password TEXT)")
-    } catch
-    {
-      print(error)
-    }
+    username = userDictionary["username"] as! String
+    password = userDictionary["password"] as! String
   }
-  
+
   func asDictionary() -> [String: Any]
   {
     return [

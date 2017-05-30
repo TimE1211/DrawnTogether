@@ -6,6 +6,8 @@
 //
 //
 
+//https://github.com/iamjono/NestedObjectsExample/blob/master/Sources/Games.swift
+
 import StORM
 import SQLiteStORM
 import PerfectLib
@@ -13,21 +15,21 @@ import PerfectLib
 class Project: SQLiteStORM
 {
   var projectUUID = ""
-  var name = ""
+  var projectName = ""
   var users = [User]()
   var lines = [Line]()
   
-  override open func table() -> String
-  {
-    return "Projects"
-  }
+//  override open func table() -> String
+//  {
+//    return "projectsTable"
+//  }
   
   override func to(_ this: StORMRow)
   {
     projectUUID = this.data["projectUUID"] as! String
-    name = this.data["name"] as! String
-    users = this.data["users"] as! [User]
-    lines = this.data["lines"] as! [Line]
+    projectName = this.data["projectName"] as! String
+    users = getUsers()
+    lines = getLines()
   }
   
   func rows() -> [Project]
@@ -42,24 +44,26 @@ class Project: SQLiteStORM
     return projects
   }
   
-  override public func setup()
-  {
-    do {
-      try sqlExec("CREATE TABLE IF NOT EXISTS Projects (projectUUID TEXT PRIMARY KEY NOT NULL, name TEXT, users TEXT FOREIGN KEY, lines INTEGER FOREIGN KEY)")
-    } catch
-    {
-      print(error)
-    }
-  }
-  
   func asDictionary() -> [String: Any]
   {
     return [
       "projectUUID": self.projectUUID,
-      "name": self.name,
+      "projectName": self.projectName,
       "users": self.users,
       "lines": self.lines
     ]
+  }
+  
+  public func getLines() -> [Line]
+  {
+    let _lines = Line()
+    return _lines.rows()
+  }
+  
+  public func getUsers() -> [User]
+  {
+    let users = User()
+    return users.rows()
   }
 }
 
