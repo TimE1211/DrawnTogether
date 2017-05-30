@@ -18,10 +18,10 @@ class Line: SQLiteStORM
   var endx = "0"
   var endy = "0"
   
-  override open func table() -> String
-  {
-    return "linesTable"
-  }
+//  override open func table() -> String
+//  {
+//    return "linesTable"
+//  }
 
   override func to(_ this: StORMRow)
   {
@@ -30,15 +30,6 @@ class Line: SQLiteStORM
     starty = this.data["starty"] as! String
     endx = this.data["endx"] as! String
     endy = this.data["endy"] as! String
-  }
-
-  func asDictionaryFrom(lineDictionary: [String: Any])
-  {
-    projectUUID = lineDictionary["projectUUID"] as! String
-    startx = lineDictionary["startx"] as! String
-    starty = lineDictionary["starty"] as! String
-    endx = lineDictionary["endx"] as! String
-    endy = lineDictionary["endy"] as! String
   }
   
   func rows() -> [Line]
@@ -51,6 +42,15 @@ class Line: SQLiteStORM
       lines.append(line)
     }
     return lines
+  }
+  
+  func asDictionaryFrom(lineDictionary: [String: Any])
+  {
+    projectUUID = lineDictionary["projectUUID"] as! String
+    startx = lineDictionary["startx"] as! String
+    starty = lineDictionary["starty"] as! String
+    endx = lineDictionary["endx"] as! String
+    endy = lineDictionary["endy"] as! String
   }
 
   func asDictionary() -> [String: Any]

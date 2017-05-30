@@ -15,22 +15,16 @@ class User: SQLiteStORM
 {
   var username = ""
   var password = ""
-
-  override open func table() -> String
-  {
-    return "usersTable"
-  }
+//
+//  override open func table() -> String
+//  {
+//    return "usersTable"
+//  }
   
   override func to(_ this: StORMRow)
   {
     username = this.data["username"] as! String
     password = this.data["password"] as! String
-  }
-  
-  func asDictionaryFrom(userDictionary: [String: Any])
-  {
-    username = userDictionary["username"] as! String
-    password = userDictionary["password"] as! String
   }
   
   func rows() -> [User]
@@ -43,6 +37,12 @@ class User: SQLiteStORM
       users.append(user)
     }
     return users
+  }
+  
+  func asDictionaryFrom(userDictionary: [String: Any])
+  {
+    username = userDictionary["username"] as! String
+    password = userDictionary["password"] as! String
   }
 
   func asDictionary() -> [String: Any]

@@ -20,15 +20,13 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   let json = JSON(request.postBodyString!)
   print(json)
   
-  //  let params = request.postParams
-  //  print(params)
   guard let projectUUID = json["projectUUID"].string,
     let projectName = json["projectName"].string,
     let users = json["users"].array,
     let lines = json["lines"].array else
   {
     response.status = .badRequest
-    responseDictionary["error"] = "Please supply values"
+    responseDictionary["error"] = "Please supply project values"
     print(responseDictionary["error"]!)
     do {
       try response.setBody(json: responseDictionary)
@@ -97,7 +95,7 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
     let password = json["password"].string else
   {
     response.status = .badRequest
-    responseDictionary["error"] = "Please supply values"
+    responseDictionary["error"] = "Please supply user values"
     print(responseDictionary["error"]!)
     do {
       try response.setBody(json: responseDictionary)
@@ -151,6 +149,7 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
   do {
     try getObj.findAll()
     let users = getObj.rows().map{ $0.asDictionary()}
+    print(users)
     try response.setBody(json: users)
       .completed()
   } catch

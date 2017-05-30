@@ -19,10 +19,10 @@ class Project: SQLiteStORM
   var users = [User]()
   var lines = [Line]()
   
-  override open func table() -> String
-  {
-    return "projectsTable"
-  }
+//  override open func table() -> String
+//  {
+//    return "projectsTable"
+//  }
   
   override func to(_ this: StORMRow)
   {
