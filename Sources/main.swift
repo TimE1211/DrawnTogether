@@ -47,10 +47,11 @@ routes.add(method: .post, uri: "post", handler: {
 })
 
 routes.add(method: .post, uri: "/saveProject", handler: saveProject)
-routes.add(method: .post, uri: "/saveLine", handler: saveLine)
-routes.add(method: .get, uri: "/getProject", handler: getProject)
 routes.add(method: .post, uri: "/saveUser", handler: saveUser)
-routes.add(method: .get, uri: "/getUser", handler: getUser)
+routes.add(method: .post, uri: "/saveLine", handler: saveLine)
+routes.add(method: .get, uri: "/getProjects", handler: getProjects)
+routes.add(method: .get, uri: "/getUsers", handler: getUsers)
+routes.add(method: .get, uri: "/getLines", handler: getLines)
 
 server.addRoutes(routes)
 

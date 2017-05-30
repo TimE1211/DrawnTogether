@@ -74,7 +74,39 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   response.completed()
 }
 
-func getProject(request: HTTPRequest, _ response: HTTPResponse)
+func saveUser(request: HTTPRequest, _ response: HTTPResponse)
+{
+  
+}
+
+func saveLine(request: HTTPRequest, _ response: HTTPResponse)
+{
+  response.setHeader(.contentType, value: "application/json")
+  var responseDictionary = [String: String]()
+  guard let startx = request.param(name: "startx"),
+    let starty = request.param(name: "starty"),
+    let endx = request.param(name: "endx"),
+    let endy = request.param(name: "endy") else {
+      response.status = .badRequest
+      responseDictionary["error"] = "Please supply values"
+      return
+  }
+  let line = Line(connect)
+  line.startx = startx
+  line.starty = starty
+  line.endx = endx
+  line.endy = endy
+  do {
+    try line.save()
+    responseDictionary["error"] = "Line saved."
+    print(responseDictionary["error"]!)
+  } catch
+  {
+    response.completed()
+  }
+}
+
+func getProjects(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
@@ -93,39 +125,12 @@ func getProject(request: HTTPRequest, _ response: HTTPResponse)
   }
 }
 
-func saveLine(request: HTTPRequest, _ response: HTTPResponse)
-{
-  response.setHeader(.contentType, value: "application/json")
-  var responseDictionary = [String: String]()
-  guard let startx = request.param(name: "startx"),
-    let starty = request.param(name: "starty"),
-    let endx = request.param(name: "endx"),
-    let endy = request.param(name: "endy") else {
-    response.status = .badRequest
-    responseDictionary["error"] = "Please supply values"
-    return
-  }
-  let line = Line(connect)
-  line.startx = startx
-  line.starty = starty
-  line.endx = endx
-  line.endy = endy
-  do {
-    try line.save()
-    responseDictionary["error"] = "Line saved."
-    print(responseDictionary["error"]!)
-  } catch
-  {
-    response.completed()
-  }
-}
-
-func saveUser(request: HTTPRequest, _ response: HTTPResponse)
+func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
   
 }
 
-func getUser(request: HTTPRequest, _ response: HTTPResponse)
+func getLines(request: HTTPRequest, _ response: HTTPResponse)
 {
   
 }

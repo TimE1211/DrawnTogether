@@ -27,9 +27,9 @@ class Project: SQLiteStORM
   {
     projectUUID = this.data["projectUUID"] as! String
     name = this.data["name"] as! String
-    user1 = this.data["user1"] as! String
+    user1 = this.data["user1"] as! String  //getUsers()
     user2 = this.data["user2"] as! String
-    lines = this.data["lines"] as! [Line]
+    lines = this.data["lines"] as! [Line] //getLines()
   }
   
   func rows() -> [Project]
@@ -64,5 +64,15 @@ class Project: SQLiteStORM
       "lines": self.lines
     ]
   }
+  
+//  public func getScores() -> [Line]
+//  {
+//    return [Line]
+//  }
+  
+//  public func getUsers() = [User]
+//{
+//  
+//}
 }
 
