@@ -14,7 +14,6 @@ import PerfectLib
 
 class Project: SQLiteStORM
 {
-  var id = 0
   var projectUUID = ""
   var projectName = ""
   var users = [User]()
@@ -38,7 +37,7 @@ class Project: SQLiteStORM
     var projects = [Project]()
     for i in 0..<self.results.rows.count
     {
-      let project = Project(connect)
+      let project = Project()
       project.to(self.results.rows[i])
       projects.append(project)
     }
@@ -57,13 +56,13 @@ class Project: SQLiteStORM
   
   public func getLines() -> [Line]
   {
-    let _lines = Line(connect)
+    let _lines = Line()
     return _lines.rows()
   }
   
   public func getUsers() -> [User]
   {
-    let users = User(connect)
+    let users = User()
     return users.rows()
   }
 }

@@ -12,12 +12,11 @@ import PerfectLib
 
 class Line: SQLiteStORM
 {
-  var id = 0
+  var projectUUID = ""
   var startx = "0"
   var starty = "0"
   var endx = "0"
   var endy = "0"
-  var projectId = ""
   
   override open func table() -> String
   {
@@ -26,7 +25,7 @@ class Line: SQLiteStORM
 
   override func to(_ this: StORMRow)
   {
-    id = this.data["id"] as? Int ?? 0
+    projectUUID = this.data["projectUUID"] as! String
     startx = this.data["startx"] as! String
     starty = this.data["starty"] as! String
     endx = this.data["endx"] as! String
@@ -35,7 +34,7 @@ class Line: SQLiteStORM
 
   func asDictionaryFrom(lineDictionary: [String: Any])
   {
-    id = lineDictionary["id"] as? Int ?? 0
+    projectUUID = lineDictionary["projectUUID"] as! String
     startx = lineDictionary["startx"] as! String
     starty = lineDictionary["starty"] as! String
     endx = lineDictionary["endx"] as! String
@@ -57,6 +56,7 @@ class Line: SQLiteStORM
   func asDictionary() -> [String: Any]
   {
     return [
+      "projectUUID": self.projectUUID,
       "startx": self.startx,
       "starty": self.starty,
       "endx": self.endx,

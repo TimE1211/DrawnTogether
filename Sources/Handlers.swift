@@ -29,6 +29,7 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
+    print(responseDictionary["error"]!)
     do {
       try response.setBody(json: responseDictionary)
     }catch
@@ -39,7 +40,7 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let project = Project(connect)
+  let project = Project()
   
   project.projectUUID = projectUUID
   project.projectName = projectName
@@ -86,19 +87,18 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-  let json = JSON(request.postBodyString!)
+  guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
+    let json = JSON(data: dataFromString)
+//  let json = JSON(request.postBodyString!)
+  
   print(json)
   
-  //  let params = request.postParams
-  //  print(params)
-  //
-  //  guard let username = request.param(name: "username"),
-  //    let password = request.param(name: "password") else
   guard let username = json["username"].string,
     let password = json["password"].string else
   {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply values"
+    print(responseDictionary["error"]!)
     do {
       try response.setBody(json: responseDictionary)
     }catch
@@ -109,14 +109,14 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let user = User(connect)
+  let user = User()
   
   user.username = username
   user.password = password
   do {
     try user.save()
     responseDictionary["error"] = "User saved."
-    print(responseDictionary["error"]!)
+    print("responseDict: \(responseDictionary["error"]!)")
   } catch
   {
     response.completed()
@@ -127,7 +127,7 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = Project(connect)
+  let getObj = Project()
   
   do {
     try getObj.findAll()
@@ -146,7 +146,7 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = User(connect)
+  let getObj = User()
   
   do {
     try getObj.findAll()

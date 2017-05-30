@@ -38,7 +38,7 @@ class User: SQLiteStORM
     var users = [User]()
     for i in 0..<self.results.rows.count
     {
-      let user = User(connect)
+      let user = User()
       user.to(self.results.rows[i])
       users.append(user)
     }
