@@ -10,6 +10,7 @@
 import StORM
 import SQLiteStORM
 import PerfectLib
+import SwiftyJSON
 
 class User: SQLiteStORM
 {
@@ -24,8 +25,8 @@ class User: SQLiteStORM
   
   override func to(_ this: StORMRow)
   {
-    username = this.data["username"] as! String
-    password = this.data["password"] as! String
+    username = this.data["username"] as? String ?? ""
+    password = this.data["password"] as? String ?? ""
 //    _projectUUIDs = getProjs()
   }
   
@@ -41,10 +42,10 @@ class User: SQLiteStORM
     return users
   }
   
-  func asDictionaryFrom(userDictionary: [String: Any])
+  func asDictionaryFrom(userDictionary: [String: JSON])
   {
-    username = userDictionary["username"] as! String
-    password = userDictionary["password"] as! String
+    username = (userDictionary["username"]?.string)!
+    password = (userDictionary["password"]?.string)!
 //    _projectUUIDs = userDictionary["projectUUIDs"] as! [Project]
   }
 

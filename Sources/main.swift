@@ -3,7 +3,7 @@ import PerfectHTTP
 import PerfectHTTPServer
 import SQLiteStORM
 
-//let connect = SQLiteConnect("./projectdb")
+let connect = SQLiteConnect("./projectsdb")
 //let projects = Project(connect)
 //let lines = Line(connect)
 //let users = User(connect)
@@ -37,21 +37,26 @@ routes.add(method: .get, uri: "/getUsers", handler: getUsers)
 
 server.addRoutes(routes)
 
-//let userTest = User()
-//do {
-//  try userTest.get(userSetup.username)
-//} catch {
-//  print("gameTest.get error: \(error)")
-//}
-//print("username: \(userTest.username)")
-//print("password: \(userTest.password)")
-//userTest._projectUUIDs.forEach{
-//  projectUUID in
-//  print("projectUUID: \(project.name), \(project.projectUUID)")
-//}
-
 do {
   try server.start()
 } catch PerfectError.networkError(let err, let msg) {
   print("Network error thrown: \(err) \(msg)")
 }
+
+var user1 = User()
+user1.username = "Joe"
+user1.password = "asldf"
+do {
+  try user1.save()
+} catch {
+  print("scoreSetup1 error: \(error)")
+}
+
+let userTest = User()
+do {
+  try userTest.get(user1.username)
+} catch {
+  print("gameTest.get error: \(error)")
+}
+print("username: \(userTest.username)")
+print("password: \(userTest.password)")

@@ -18,16 +18,16 @@ class Project: SQLiteStORM
   var projectName = ""
   var _users = [User]()
   var _lines = [Line]()
-  
+//  
 //  override open func table() -> String
 //  {
-//    return "projectsTable"
+//    return "project"
 //  }
   
   override func to(_ this: StORMRow)
   {
-    projectUUID = this.data["projectUUID"] as! String
-    projectName = this.data["projectName"] as! String
+    projectUUID = this.data["projectUUID"] as? String ?? ""
+    projectName = this.data["projectName"] as? String ?? ""
     _users = getUsers()
     _lines = getLines()
   }

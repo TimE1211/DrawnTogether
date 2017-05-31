@@ -12,15 +12,14 @@ import StORM
 import Foundation
 import SwiftyJSON
 
-//let user = User()
-//let project = Project()
-
 func saveProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
-  let json = JSON(request.postBodyString!)
+  guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
+  let json = JSON(data: dataFromString)
+  
   print(json)
   
   guard let projectUUID = json["projectUUID"].string,
@@ -41,29 +40,31 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  project.projectUUID = projectUUID
-  project.projectName = projectName
+  let aProject = Project(connect)
   
-  var usersArray = [User]()
-  for userDict in users
-  {
-    let user = User()
-    user.asDictionaryFrom(userDictionary: userDict.dictionary!)
-    usersArray.append(user)
-  }
-  project._users = usersArray
+  aProject.projectUUID = projectUUID
+  aProject.projectName = projectName
   
-  var linesArray = [Line]()
-  for lineDict in lines
-  {
-    let line = Line()
-    line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
-    linesArray.append(line)
-  }
-  project._lines = linesArray
+//  var usersArray = [User]()
+//  for userDict in users
+//  {
+//    let user = User()
+//    user.asDictionaryFrom(userDictionary: userDict.dictionary!)
+//    usersArray.append(user)
+//  }
+//  aProject._users = usersArray
+//  
+//  var linesArray = [Line]()
+//  for lineDict in lines
+//  {
+//    let line = Line()
+//    line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
+//    linesArray.append(line)
+//  }
+//  aProject._lines = linesArray
   
   do {
-    try project.save()
+    try aProject.save()
     responseDictionary["error"] = "Project saved."
     print(responseDictionary["error"]!)
   } catch

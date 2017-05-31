@@ -9,6 +9,7 @@
 import StORM
 import SQLiteStORM
 import PerfectLib
+import SwiftyJSON
 
 class Line: SQLiteStORM
 {
@@ -17,6 +18,8 @@ class Line: SQLiteStORM
   var starty = "0"
   var endx = "0"
   var endy = "0"
+  var color = ""
+  var thickness = "0"
   
 //  override open func table() -> String
 //  {
@@ -25,11 +28,13 @@ class Line: SQLiteStORM
 
   override func to(_ this: StORMRow)
   {
-    projectUUID = this.data["projectUUID"] as! String
-    startx = this.data["startx"] as! String
-    starty = this.data["starty"] as! String
-    endx = this.data["endx"] as! String
-    endy = this.data["endy"] as! String
+    projectUUID = this.data["projectUUID"] as? String ?? ""
+    startx = this.data["startx"] as? String ?? ""
+    starty = this.data["starty"] as? String ?? ""
+    endx = this.data["endx"] as? String ?? ""
+    endy = this.data["endy"] as? String ?? ""
+    color = this.data["color"] as? String ?? ""
+    thickness = this.data["thickness"] as? String ?? ""
   }
   
   func rows() -> [Line]
@@ -44,13 +49,15 @@ class Line: SQLiteStORM
     return lines
   }
   
-  func asDictionaryFrom(lineDictionary: [String: Any])
+  func asDictionaryFrom(lineDictionary: [String: JSON])
   {
-    projectUUID = lineDictionary["projectUUID"] as! String
-    startx = lineDictionary["startx"] as! String
-    starty = lineDictionary["starty"] as! String
-    endx = lineDictionary["endx"] as! String
-    endy = lineDictionary["endy"] as! String
+    projectUUID = (lineDictionary["projectUUID"]?.string)!
+    startx = (lineDictionary["startx"]?.string)!
+    starty = (lineDictionary["starty"]?.string)!
+    endx = (lineDictionary["endx"]?.string)!
+    endy = (lineDictionary["endy"]?.string)!
+    color = (lineDictionary["color"]?.string)!
+    thickness = (lineDictionary["thickness"]?.string)!
   }
 
   func asDictionary() -> [String: Any]
@@ -60,7 +67,9 @@ class Line: SQLiteStORM
       "startx": self.startx,
       "starty": self.starty,
       "endx": self.endx,
-      "endy": self.endy
+      "endy": self.endy,
+      "color": self.color,
+      "thickness": self.thickness,
     ]
   }
 }
