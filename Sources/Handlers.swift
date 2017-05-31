@@ -40,28 +40,28 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let aProject = Project(connect)
+  let aProject = Project()
   
   aProject.projectUUID = projectUUID
   aProject.projectName = projectName
   
-//  var usersArray = [User]()
-//  for userDict in users
-//  {
-//    let user = User()
-//    user.asDictionaryFrom(userDictionary: userDict.dictionary!)
-//    usersArray.append(user)
-//  }
-//  aProject._users = usersArray
-//  
-//  var linesArray = [Line]()
-//  for lineDict in lines
-//  {
-//    let line = Line()
-//    line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
-//    linesArray.append(line)
-//  }
-//  aProject._lines = linesArray
+  var usersArray = [User]()
+  for userDict in users
+  {
+    let user = User()
+    user.asDictionaryFrom(userDictionary: userDict.dictionary!)
+    usersArray.append(user)
+  }
+  aProject._users = usersArray
+  
+  var linesArray = [Line]()
+  for lineDict in lines
+  {
+    let line = Line()
+    line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
+    linesArray.append(line)
+  }
+  aProject._lines = linesArray
   
   do {
     try aProject.save()
@@ -107,9 +107,10 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
     response.completed()
     return
   }
+  let aUser = User()
   
-  user.username = username
-  user.password = password
+  aUser.username = username
+  aUser.password = password
   do {
     try user.save()
     responseDictionary["error"] = "User saved."
@@ -126,9 +127,11 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
+  let aProject = Project()
+  
   do {
-    try project.findAll()
-    let projects = project.rows().map{ $0.asDictionary()}
+    try aProject.findAll()
+    let projects = aProject.rows().map{ $0.asDictionary()}
     try response.setBody(json: projects)
       .completed()
   } catch
@@ -143,10 +146,12 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
+  let aUser = User()
+  
   do {
-    try user.findAll()
+    try aUser.findAll()
 //    try getObj.get(user.username)
-    let users = user.rows().map{ $0.asDictionary()}
+    let users = aUser.rows().map{ $0.asDictionary()}
     print(users)
     try response.setBody(json: users)
       .completed()

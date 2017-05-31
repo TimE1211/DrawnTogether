@@ -3,7 +3,7 @@ import PerfectHTTP
 import PerfectHTTPServer
 import SQLiteStORM
 
-let connect = SQLiteConnect("./projectsdb")
+//let connect = SQLiteConnect("./projectsdb")
 //let projects = Project(connect)
 //let lines = Line(connect)
 //let users = User(connect)
@@ -18,6 +18,26 @@ try? user.setup()
 
 let line = Line()
 try? line.setup()
+
+
+var user1 = User()
+user1.username = "Joe"
+user1.password = "asldf"
+do {
+  try user1.save()
+  print("saved")
+} catch {
+  print("user1 error: \(error)")
+}
+
+let userTest = User()
+do {
+  try userTest.get(user1.username)
+} catch {
+  print("gameTest.get error: \(error)")
+}
+print("username: \(userTest.username)")
+print("password: \(userTest.password)")
 
 let server = HTTPServer()
 server.serverPort = 8080
@@ -43,20 +63,3 @@ do {
   print("Network error thrown: \(err) \(msg)")
 }
 
-var user1 = User()
-user1.username = "Joe"
-user1.password = "asldf"
-do {
-  try user1.save()
-} catch {
-  print("scoreSetup1 error: \(error)")
-}
-
-let userTest = User()
-do {
-  try userTest.get(user1.username)
-} catch {
-  print("gameTest.get error: \(error)")
-}
-print("username: \(userTest.username)")
-print("password: \(userTest.password)")
