@@ -15,6 +15,7 @@ class User: SQLiteStORM
 {
   var username = ""
   var password = ""
+//  var _projectUUIDs = [Project]()
 //
 //  override open func table() -> String
 //  {
@@ -25,6 +26,7 @@ class User: SQLiteStORM
   {
     username = this.data["username"] as! String
     password = this.data["password"] as! String
+//    _projectUUIDs = getProjs()
   }
   
   func rows() -> [User]
@@ -43,14 +45,22 @@ class User: SQLiteStORM
   {
     username = userDictionary["username"] as! String
     password = userDictionary["password"] as! String
+//    _projectUUIDs = userDictionary["projectUUIDs"] as! [Project]
   }
 
   func asDictionary() -> [String: Any]
   {
     return [
       "username": self.username,
-      "password": self.password
+      "password": self.password,
+//      "projectUUIDs": self._projectUUIDs
     ]
   }
+  
+//  public func getProjs() -> [Project]
+//  {
+//    let projs = Project()
+//    return projs.rows()
+//  }
 }
 

@@ -16,8 +16,8 @@ class Project: SQLiteStORM
 {
   var projectUUID = ""
   var projectName = ""
-  var users = [User]()
-  var lines = [Line]()
+  var _users = [User]()
+  var _lines = [Line]()
   
 //  override open func table() -> String
 //  {
@@ -28,8 +28,8 @@ class Project: SQLiteStORM
   {
     projectUUID = this.data["projectUUID"] as! String
     projectName = this.data["projectName"] as! String
-    users = getUsers()
-    lines = getLines()
+    _users = getUsers()
+    _lines = getLines()
   }
   
   func rows() -> [Project]
@@ -49,15 +49,15 @@ class Project: SQLiteStORM
     return [
       "projectUUID": self.projectUUID,
       "projectName": self.projectName,
-      "users": self.users,
-      "lines": self.lines
+      "users": self._users,
+      "lines": self._lines
     ]
   }
   
   public func getLines() -> [Line]
   {
-    let _lines = Line()
-    return _lines.rows()
+    let lines = Line()
+    return lines.rows()
   }
   
   public func getUsers() -> [User]

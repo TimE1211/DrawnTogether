@@ -12,6 +12,9 @@ import StORM
 import Foundation
 import SwiftyJSON
 
+//let user = User()
+//let project = Project()
+
 func saveProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
@@ -38,8 +41,6 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let project = Project(connect)
-  
   project.projectUUID = projectUUID
   project.projectName = projectName
   
@@ -50,7 +51,7 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
     user.asDictionaryFrom(userDictionary: userDict.dictionary!)
     usersArray.append(user)
   }
-  project.users = usersArray
+  project._users = usersArray
   
   var linesArray = [Line]()
   for lineDict in lines
@@ -59,7 +60,7 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
     line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
     linesArray.append(line)
   }
-  project.lines = linesArray
+  project._lines = linesArray
   
   do {
     try project.save()
@@ -106,8 +107,6 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let user = User(connect)
-  
   user.username = username
   user.password = password
   do {
@@ -126,11 +125,9 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = Project(connect)
-  
   do {
-    try getObj.findAll()
-    let projects = getObj.rows().map{ $0.asDictionary()}
+    try project.findAll()
+    let projects = project.rows().map{ $0.asDictionary()}
     try response.setBody(json: projects)
       .completed()
   } catch
@@ -145,11 +142,10 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   
-  let getObj = User(connect)
-  
   do {
-    try getObj.findAll()
-    let users = getObj.rows().map{ $0.asDictionary()}
+    try user.findAll()
+//    try getObj.get(user.username)
+    let users = user.rows().map{ $0.asDictionary()}
     print(users)
     try response.setBody(json: users)
       .completed()
