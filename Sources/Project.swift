@@ -25,7 +25,7 @@ class Project: SQLiteStORM
     id = this.data["id"] as? Int ?? 0
     projectName = this.data["projectName"] as? String ?? ""
     user1Id = this.data["user1Id"] as? Int ?? 0
-    user2Id = this.data["user1Id"] as? Int ?? 0
+    user2Id = this.data["user2Id"] as? Int ?? 0
     _lines = getLines()
   }
   
@@ -57,7 +57,7 @@ class Project: SQLiteStORM
     let lines = Line()
     
     do {
-      try lines.select(whereclause: "projectId = :\(id)", params: [id], orderby: ["id"])
+      try lines.select(whereclause: "projectId = :1", params: [id], orderby: ["id"])
     } catch {
       print("line get error: \(error)")
     }
