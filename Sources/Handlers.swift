@@ -80,7 +80,7 @@ func createProject(request: HTTPRequest, _ response: HTTPResponse)
     }
     responseDictionary["error"] = "Project saved."
     print(responseDictionary["error"]!)
-    responseDictionary["error"] = "\(aProject.id)"
+    responseDictionary["projectId"] = "\(aProject.id)"
   } catch
   {
     responseDictionary["error"] = "Project could not be saved: \(error)"
@@ -89,11 +89,13 @@ func createProject(request: HTTPRequest, _ response: HTTPResponse)
   
   do {
     try response.setBody(json: responseDictionary)
-  } catch
-  {
-    print("Response Error: \(error)")
+      .setHeader(.contentType, value: "application/json")
+      .completed()
+  } catch {
+    print("Couldnt set response Body for projects: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
   }
-  response.completed()
 }
 
 func saveUser(request: HTTPRequest, _ response: HTTPResponse)
@@ -131,13 +133,21 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
     }
     responseDictionary["error"] = "User saved."
     print("responseDict: \(responseDictionary["error"] ?? "user saved")")
-    responseDictionary["error"] = "\(aUser.id)"
+    responseDictionary["userId"] = "\(aUser.id)"
   } catch
   {
     responseDictionary["error"] = "Couldn't save User \(error)."
     print("responseDict: \(responseDictionary["error"] ?? "user not saved")")
   }
-  response.completed()
+  do {
+    try response.setBody(json: responseDictionary)
+    .setHeader(.contentType, value: "application/json")
+    .completed()
+  } catch {
+    print("Couldnt set response Body for users: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
+  }
 }
 
 func getProjects(request: HTTPRequest, _ response: HTTPResponse)
@@ -254,9 +264,11 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
   
   do {
     try response.setBody(json: responseDictionary)
-  } catch
-  {
-    print("Response Error: \(error)")
+      .setHeader(.contentType, value: "application/json")
+      .completed()
+  } catch {
+    print("Couldnt set response Body for projects: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
   }
-  response.completed()
 }
