@@ -18,7 +18,8 @@ func test(request: HTTPRequest, response: HTTPResponse)
     let project1 = Project()
     project1.projectName = "Joe"
     project1._lines = []
-    project1._users = []
+    project1.user1Id = 1
+    project1.user2Id = 0
     try project1.save() { id in
       project1.id = id as! Int
     }
@@ -37,7 +38,7 @@ func test(request: HTTPRequest, response: HTTPResponse)
   }
 }
 
-func saveProject(request: HTTPRequest, _ response: HTTPResponse)
+func createProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
@@ -49,8 +50,9 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   
   guard //let id = json["id"].int,
     let projectName = json["projectName"].string,
-    let users = json["users"].array,
-    let lines = json["lines"].array else
+    let user1Id = json["user1Id"].int,
+    let user2Id = json["user2Id"].int,
+    let _ = json["lines"].array else
   {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply project values"
@@ -67,26 +69,25 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   
   let aProject = Project()
   
-  //  aProject.id = id
   aProject.projectName = projectName
+//  var usersArray = [User]()
+//  for userDict in users
+//  {
+//    let user = User()
+//    user.getUserFrom(userDictionary: userDict.dictionary!)
+//    usersArray.append(user)
+//  }
+  aProject.user1Id = user1Id
+  aProject.user2Id = user2Id
   
-  var usersArray = [User]()
-  for userDict in users
-  {
-    let user = User()
-    user.getUserFrom(userDictionary: userDict.dictionary!)
-    usersArray.append(user)
-  }
-  aProject._users = usersArray
-  
-  var linesArray = [Line]()
-  for lineDict in lines
-  {
-    let line = Line()
-    line.getLineFrom(lineDictionary: lineDict.dictionary!)
-    linesArray.append(line)
-  }
-  aProject._lines = linesArray
+//  var linesArray = [Line]()
+//  for lineDict in lines
+//  {
+//    let line = Line()
+//    line.getLineFrom(lineDictionary: lineDict.dictionary!)
+//    linesArray.append(line)
+//  }
+  aProject._lines = []
   
   do {
     try aProject.save() { id in
@@ -193,14 +194,90 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
   }
 }
 
-
-//func update(cols: [lines], params: [[Line]], idName: id, idValue: project#) throws -> Bool
-//{ bool
-//  if bool == true
+func updateProject(request: HTTPRequest, _ response: HTTPResponse)
+{
+  response.setHeader(.contentType, value: "application/json")
+  var responseDictionary = [String: String]()
+  
+  guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
+  let json = JSON(data: dataFromString)
+  
+  print(json)
+  
+  guard let id = json["id"].int,
+    let projectName = json["projectName"].string,
+//    let users = json["users"].array,
+    let user1Id = json["user1Id"].int,
+    let user2Id = json["user2Id"].int,
+    let lines = json["lines"].array else
+  {
+    response.status = .badRequest
+    responseDictionary["error"] = "Please supply project values"
+    print(responseDictionary["error"]!)
+    do {
+      try response.setBody(json: responseDictionary)
+    }catch
+    {
+      print("JSON submission Error: \(error)")
+    }
+    response.completed()
+    return
+  }
+  
+  let projectToUpdate = Project()
+  
+  projectToUpdate.id = id
+  projectToUpdate.projectName = projectName
+  
+//  var usersArray = [User]()
+//  for userDict in users
 //  {
-//    print("update successful")
+//    let user = User()
+//    user.getUserFrom(userDictionary: userDict.dictionary!)
+//    usersArray.append(user)
 //  }
-//}
-//catch {
-//  error
-//}
+//  projectToUpdate.users = usersArray
+  projectToUpdate.user1Id = user1Id
+  projectToUpdate.user2Id = user2Id
+  
+  var linesArray = [Int]()
+  for lineDict in lines
+  {
+    let line = Line()
+    line.getLineFrom(lineDictionary: lineDict.dictionary!)
+    do
+    {
+    try line.save() {id in
+      line.id = id as! Int
+      }
+      responseDictionary["error"] = "Line saved."
+      print(responseDictionary["error"]!)
+    }
+      catch
+    {
+      print("Updating Line in project Error: \(error)")
+      responseDictionary["error"] = String(describing: error)
+    }
+    linesArray.append(line.id)
+  }
+  projectToUpdate._lines = linesArray
+
+  do {
+    try projectToUpdate.save(set: { _ in
+    })
+    responseDictionary["error"] = "Project updated."
+    print(responseDictionary["error"]!)
+  } catch
+  {
+    print("Updating Project Error: \(error)")
+    responseDictionary["error"] = String(describing: error)
+  }
+  
+  do {
+    try response.setBody(json: responseDictionary)
+  } catch
+  {
+    print("Response Error: \(error)")
+  }
+  response.completed()
+}

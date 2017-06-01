@@ -16,15 +16,18 @@ class Project: SQLiteStORM
 {
   var id: Int = 0
   var projectName: String = ""
-  var _users = [User]()
-  var _lines = [Line]()
+//  var _users = [User]()
+  var user1Id: Int = 0
+  var user2Id: Int = 0
+  var _lines = [Int]()
   
   override func to(_ this: StORMRow)
   {
     id = this.data["id"] as? Int ?? 0
     projectName = this.data["projectName"] as? String ?? ""
-    _users = getUsers()
-    _lines = getLines()
+    user1Id = this.data["user1Id"] as? Int ?? 0
+    user2Id = this.data["user1Id"] as? Int ?? 0
+    _lines = getLineIds()
   }
   
   func rows() -> [Project]
@@ -44,21 +47,34 @@ class Project: SQLiteStORM
     return [
       "id": self.id,
       "projectName": self.projectName,
-      "users": self._users,
+//      "users": self.users,
+      "user1Id": self.user1Id,
+      "user2Id": self.user2Id,
       "lines": self._lines
     ]
   }
   
-  public func getLines() -> [Line]
+  public func getLineIds() -> [Int]
   {
     let lines = Line()
-    return lines.rows()
+    var lineIds = [Int]()
+    
+    let allLines = lines.rows()
+    for line in allLines
+    {
+//      line with project .id
+      if line.projectId == self.id
+      {
+        lineIds.append(line.id)
+      }
+    }
+    return lineIds
   }
   
-  public func getUsers() -> [User]
-  {
-    let users = User()
-    return users.rows()
-  }
+//  public func getUsers() -> [User]
+//  {
+//    let users = User()
+//    return users.rows()
+//  }
 }
 

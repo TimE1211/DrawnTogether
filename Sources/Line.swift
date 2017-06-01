@@ -13,6 +13,7 @@ import SwiftyJSON
 
 class Line: SQLiteStORM
 {
+  var projectId = 0
   var id = 0
   var startx = "0"
   var starty = "0"
@@ -21,8 +22,9 @@ class Line: SQLiteStORM
   var color = ""
   var thickness = "0"
 
-  override func to(_ this: StORMRow)
+  override func to(_ this: StORMRow)      //from storm to object to make a dict
   {
+    projectId = this.data["projectId"] as? Int ?? 0
     id = this.data["id"] as? Int ?? 0
     startx = this.data["startx"] as? String ?? ""
     starty = this.data["starty"] as? String ?? ""
@@ -32,7 +34,7 @@ class Line: SQLiteStORM
     thickness = this.data["thickness"] as? String ?? ""
   }
   
-  func rows() -> [Line]
+  func rows() -> [Line]       //get all rows in storm table and make them into objects
   {
     var lines = [Line]()
     for i in 0..<self.results.rows.count
@@ -55,9 +57,10 @@ class Line: SQLiteStORM
     thickness = (lineDictionary["thickness"]?.string)!
   }
 
-  func asDictionary() -> [String: Any]
+  func asDictionary() -> [String: Any]        //as dict from storm
   {
     return [
+      "projectId": self.projectId,
       "id": self.id,
       "startx": self.startx,
       "starty": self.starty,

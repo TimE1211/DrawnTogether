@@ -25,7 +25,8 @@ routes.add(method: .get, uri: "/", handler: {
   .completed()
 })
 
-routes.add(method: .post, uri: "/saveProject", handler: saveProject)
+routes.add(method: .post, uri: "/createProject", handler: createProject)
+routes.add(method: .post, uri: "/updateProject", handler: updateProject)
 routes.add(method: .post, uri: "/saveUser", handler: saveUser)
 routes.add(method: .get, uri: "/getProjects", handler: getProjects)
 routes.add(method: .get, uri: "/getUsers", handler: getUsers)
