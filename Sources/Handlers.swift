@@ -12,6 +12,31 @@ import StORM
 import Foundation
 import SwiftyJSON
 
+func test(request: HTTPRequest, response: HTTPResponse)
+{
+  do {
+    let project1 = Project()
+    project1.projectName = "Joe"
+    project1._lines = []
+    project1._users = []
+    try project1.save() { id in
+      project1.id = id as! Int
+    }
+    
+    let testProject = Project()
+    try testProject.findAll()
+    let projects = testProject.rows().map{ $0.asDictionary()}
+    try response.setBody(json: projects)
+      .setHeader(.contentType, value: "application/json")
+      .completed()
+  } catch
+  {
+    print("Couldnt set response Body for projects: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
+  }
+}
+
 func saveProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
@@ -22,7 +47,7 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   
   print(json)
   
-  guard let projectUUID = json["projectUUID"].string,
+  guard //let id = json["id"].int,
     let projectName = json["projectName"].string,
     let users = json["users"].array,
     let lines = json["lines"].array else
@@ -42,14 +67,14 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   
   let aProject = Project()
   
-  aProject.projectUUID = projectUUID
+  //  aProject.id = id
   aProject.projectName = projectName
   
   var usersArray = [User]()
   for userDict in users
   {
     let user = User()
-    user.asDictionaryFrom(userDictionary: userDict.dictionary!)
+    user.getUserFrom(userDictionary: userDict.dictionary!)
     usersArray.append(user)
   }
   aProject._users = usersArray
@@ -58,13 +83,15 @@ func saveProject(request: HTTPRequest, _ response: HTTPResponse)
   for lineDict in lines
   {
     let line = Line()
-    line.asDictionaryFrom(lineDictionary: lineDict.dictionary!)
+    line.getLineFrom(lineDictionary: lineDict.dictionary!)
     linesArray.append(line)
   }
   aProject._lines = linesArray
   
   do {
-    try aProject.save()
+    try aProject.save() { id in
+      aProject.id = id as! Int
+    }
     responseDictionary["error"] = "Project saved."
     print(responseDictionary["error"]!)
   } catch
@@ -88,7 +115,7 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
   var responseDictionary = [String: String]()
   
   guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
-    let json = JSON(data: dataFromString)
+  let json = JSON(data: dataFromString)
   
   print(json)
   
@@ -112,7 +139,9 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
   aUser.username = username
   aUser.password = password
   do {
-    try user.save()
+    try aUser.save() { id in
+      aUser.id = id as! Int
+    }
     responseDictionary["error"] = "User saved."
     print("responseDict: \(responseDictionary["error"]!)")
     response.completed()
@@ -151,7 +180,6 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
   
   do {
     try aUser.findAll()
-//    try getObj.get(user.username)
     let users = aUser.rows().map{ $0.asDictionary()}
     print(users)
     try response.setBody(json: users)
@@ -165,3 +193,14 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
   }
 }
 
+
+//func update(cols: [lines], params: [[Line]], idName: id, idValue: project#) throws -> Bool
+//{ bool
+//  if bool == true
+//  {
+//    print("update successful")
+//  }
+//}
+//catch {
+//  error
+//}

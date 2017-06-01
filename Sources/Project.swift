@@ -14,19 +14,14 @@ import PerfectLib
 
 class Project: SQLiteStORM
 {
-  var projectUUID = ""
-  var projectName = ""
+  var id: Int = 0
+  var projectName: String = ""
   var _users = [User]()
   var _lines = [Line]()
-//  
-//  override open func table() -> String
-//  {
-//    return "project"
-//  }
   
   override func to(_ this: StORMRow)
   {
-    projectUUID = this.data["projectUUID"] as? String ?? ""
+    id = this.data["id"] as? Int ?? 0
     projectName = this.data["projectName"] as? String ?? ""
     _users = getUsers()
     _lines = getLines()
@@ -47,7 +42,7 @@ class Project: SQLiteStORM
   func asDictionary() -> [String: Any]
   {
     return [
-      "projectUUID": self.projectUUID,
+      "id": self.id,
       "projectName": self.projectName,
       "users": self._users,
       "lines": self._lines

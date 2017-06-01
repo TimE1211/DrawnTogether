@@ -14,20 +14,15 @@ import SwiftyJSON
 
 class User: SQLiteStORM
 {
+  var id = 0
   var username = ""
   var password = ""
-//  var _projectUUIDs = [Project]()
-//
-//  override open func table() -> String
-//  {
-//    return "usersTable"
-//  }
   
   override func to(_ this: StORMRow)
   {
+    id = this.data["id"] as? Int ?? 0
     username = this.data["username"] as? String ?? ""
     password = this.data["password"] as? String ?? ""
-//    _projectUUIDs = getProjs()
   }
   
   func rows() -> [User]
@@ -42,26 +37,19 @@ class User: SQLiteStORM
     return users
   }
   
-  func asDictionaryFrom(userDictionary: [String: JSON])
+  func getUserFrom(userDictionary: [String: JSON])
   {
     username = (userDictionary["username"]?.string)!
     password = (userDictionary["password"]?.string)!
-//    _projectUUIDs = userDictionary["projectUUIDs"] as! [Project]
   }
-
+  
   func asDictionary() -> [String: Any]
   {
     return [
+      "id": self.id,
       "username": self.username,
       "password": self.password,
-//      "projectUUIDs": self._projectUUIDs
     ]
   }
-  
-//  public func getProjs() -> [Project]
-//  {
-//    let projs = Project()
-//    return projs.rows()
-//  }
 }
 
