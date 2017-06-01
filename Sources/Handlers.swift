@@ -61,7 +61,7 @@ func createProject(request: HTTPRequest, _ response: HTTPResponse)
       try response.setBody(json: responseDictionary)
     }catch
     {
-      print("JSON submission Error: \(error)")
+      print("Project JSON submission Error: \(error)")
     }
     response.completed()
     return
@@ -80,10 +80,11 @@ func createProject(request: HTTPRequest, _ response: HTTPResponse)
     }
     responseDictionary["error"] = "Project saved."
     print(responseDictionary["error"]!)
+    responseDictionary["error"] = "\(aProject.id)"
   } catch
   {
-    print("Saving Error: \(error)")
-    responseDictionary["error"] = String(describing: error)
+    responseDictionary["error"] = "Project could not be saved: \(error)"
+    print(responseDictionary["error"]!)
   }
   
   do {
@@ -110,12 +111,12 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
   {
     response.status = .badRequest
     responseDictionary["error"] = "Please supply user values"
-    print(responseDictionary["error"]!)
+    print(responseDictionary["error"] ?? "user value incorrect")
     do {
       try response.setBody(json: responseDictionary)
     }catch
     {
-      print("JSON submission Error: \(error)")
+      print("User JSON submission Error: \(error)")
     }
     response.completed()
     return
@@ -129,13 +130,14 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
       aUser.id = id as! Int
     }
     responseDictionary["error"] = "User saved."
-    print("responseDict: \(responseDictionary["error"]!)")
-    response.completed()
+    print("responseDict: \(responseDictionary["error"] ?? "user saved")")
+    responseDictionary["error"] = "\(aUser.id)"
   } catch
   {
     responseDictionary["error"] = "Couldn't save User \(error)."
-    response.completed()
+    print("responseDict: \(responseDictionary["error"] ?? "user not saved")")
   }
+  response.completed()
 }
 
 func getProjects(request: HTTPRequest, _ response: HTTPResponse)
