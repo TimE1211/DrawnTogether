@@ -13,8 +13,8 @@ import SwiftyJSON
 
 class Line: SQLiteStORM
 {
-  var projectId = 0
   var id = 0
+  var projectId = 0
   var startx = "0"
   var starty = "0"
   var endx = "0"
@@ -24,8 +24,8 @@ class Line: SQLiteStORM
 
   override func to(_ this: StORMRow)      //from storm to object to make a dict
   {
-    projectId = this.data["projectId"] as? Int ?? 0
     id = this.data["id"] as? Int ?? 0
+    projectId = this.data["projectId"] as? Int ?? 0
     startx = this.data["startx"] as? String ?? ""
     starty = this.data["starty"] as? String ?? ""
     endx = this.data["endx"] as? String ?? ""
@@ -46,9 +46,9 @@ class Line: SQLiteStORM
     return lines
   }
   
-  func getLineFrom(lineDictionary: [String: JSON])
+  func getLineFrom(lineDictionary: [String: JSON])      //make line obj from json request
   {
-    id = (lineDictionary["id"]?.int)!
+    projectId = (lineDictionary["projectId"]?.int)!
     startx = (lineDictionary["startx"]?.string)!
     starty = (lineDictionary["starty"]?.string)!
     endx = (lineDictionary["endx"]?.string)!
@@ -60,8 +60,8 @@ class Line: SQLiteStORM
   func asDictionary() -> [String: Any]        //as dict from storm
   {
     return [
-      "projectId": self.projectId,
       "id": self.id,
+      "projectId": self.projectId,
       "startx": self.startx,
       "starty": self.starty,
       "endx": self.endx,

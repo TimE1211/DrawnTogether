@@ -54,16 +54,22 @@ class Project: SQLiteStORM
   
   public func getLineIds() -> [Int]
   {
-    let lines = Line()
+    let aLine = Line()
     var lineIds = [Int]()
     
-    let allLines = lines.rows()
-    for line in allLines
-    {
-      if line.projectId == self.id
+    do {
+      try aLine.findAll()
+      let allLines = aLine.rows()
+      for line in allLines
       {
-        lineIds.append(line.id)
+        if line.projectId == self.id
+        {
+          let thisProjectsLine = line
+          lineIds.append(thisProjectsLine.id)
+        }
       }
+    } catch {
+      print("Couldnt find all Lines: \(error)")
     }
     return lineIds
   }

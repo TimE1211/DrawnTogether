@@ -208,13 +208,6 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  let projectToUpdate = Project()
-  
-  projectToUpdate.id = id
-  projectToUpdate.projectName = projectName
-  projectToUpdate.user1Id = user1Id
-  projectToUpdate.user2Id = user2Id
-  
   var linesArray = [Int]()
   for lineDict in lines
   {
@@ -222,19 +215,28 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
     line.getLineFrom(lineDictionary: lineDict.dictionary!)
     do
     {
-    try line.save() {id in
-      line.id = id as! Int
+      try line.save() { id in
+        line.id = id as! Int
+        print(line.id)
       }
       responseDictionary["error"] = "Line saved."
       print(responseDictionary["error"]!)
     }
-      catch
+    catch
     {
       print("Updating Line in project Error: \(error)")
       responseDictionary["error"] = String(describing: error)
     }
     linesArray.append(line.id)
   }
+
+  
+  let projectToUpdate = Project()
+  
+  projectToUpdate.id = id
+  projectToUpdate.projectName = projectName
+  projectToUpdate.user1Id = user1Id
+  projectToUpdate.user2Id = user2Id
   projectToUpdate._lines = linesArray
 
   do {
