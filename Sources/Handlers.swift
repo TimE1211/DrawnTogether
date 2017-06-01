@@ -133,6 +133,7 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
     try aProject.findAll()
     let projects = aProject.rows().map{ $0.asDictionary()}
     try response.setBody(json: projects)
+      .setHeader(.contentType, value: "application/json")
       .completed()
   } catch
   {
@@ -154,6 +155,7 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
     let users = aUser.rows().map{ $0.asDictionary()}
     print(users)
     try response.setBody(json: users)
+      .setHeader(.contentType, value: "application/json")
       .completed()
   } catch
   {

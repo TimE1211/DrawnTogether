@@ -19,26 +19,6 @@ try? user.setup()
 let line = Line()
 try? line.setup()
 
-
-var user1 = User()
-user1.username = "Joe"
-user1.password = "asldf"
-do {
-  try user1.save()
-  print("saved")
-} catch {
-  print("user1 error: \(error)")
-}
-
-let userTest = User()
-do {
-  try userTest.get(user1.username)
-} catch {
-  print("gameTest.get error: \(error)")
-}
-print("username: \(userTest.username)")
-print("password: \(userTest.password)")
-
 let server = HTTPServer()
 server.serverPort = 8080
 server.documentRoot = "webroot"
@@ -50,10 +30,36 @@ routes.add(method: .get, uri: "/", handler: {
   .completed()
 })
 
-routes.add(method: .post, uri: "/saveProject", handler: saveProject)
-routes.add(method: .post, uri: "/saveUser", handler: saveUser)
-routes.add(method: .get, uri: "/getProjects", handler: getProjects)
-routes.add(method: .get, uri: "/getUsers", handler: getUsers)
+func test(request: HTTPRequest, response: HTTPResponse)
+{
+  do {
+    let project1 = Project()
+    project1.projectName = "Joe"
+    project1._lines = []
+    project1._users = []
+    try project1.save() { projectUUID in
+      project1.projectUUID = projectUUID as! String
+    }
+
+  let testProject = Project()
+  try testProject.findAll()
+  let projects = testProject.rows().map{ $0.asDictionary()}
+  try response.setBody(json: projects)
+    .setHeader(.contentType, value: "application/json")
+    .completed()
+  } catch
+  {
+    print("Couldnt set response Body for projects: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
+  }
+}
+
+//routes.add(method: .post, uri: "/saveProject", handler: saveProject)
+//routes.add(method: .post, uri: "/saveUser", handler: saveUser)
+//routes.add(method: .get, uri: "/getProjects", handler: getProjects)
+//routes.add(method: .get, uri: "/getUsers", handler: getUsers)
+routes.add(method: .get, uri: "/test", handler: test)
 
 server.addRoutes(routes)
 
