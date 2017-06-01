@@ -48,7 +48,7 @@ func createProject(request: HTTPRequest, _ response: HTTPResponse)
   
   print(json)
   
-  guard //let id = json["id"].int,
+  guard
     let projectName = json["projectName"].string,
     let user1Id = json["user1Id"].int,
     let user2Id = json["user2Id"].int,
@@ -70,23 +70,8 @@ func createProject(request: HTTPRequest, _ response: HTTPResponse)
   let aProject = Project()
   
   aProject.projectName = projectName
-//  var usersArray = [User]()
-//  for userDict in users
-//  {
-//    let user = User()
-//    user.getUserFrom(userDictionary: userDict.dictionary!)
-//    usersArray.append(user)
-//  }
   aProject.user1Id = user1Id
   aProject.user2Id = user2Id
-  
-//  var linesArray = [Line]()
-//  for lineDict in lines
-//  {
-//    let line = Line()
-//    line.getLineFrom(lineDictionary: lineDict.dictionary!)
-//    linesArray.append(line)
-//  }
   aProject._lines = []
   
   do {
@@ -206,7 +191,6 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
   
   guard let id = json["id"].int,
     let projectName = json["projectName"].string,
-//    let users = json["users"].array,
     let user1Id = json["user1Id"].int,
     let user2Id = json["user2Id"].int,
     let lines = json["lines"].array else
@@ -228,15 +212,6 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
   
   projectToUpdate.id = id
   projectToUpdate.projectName = projectName
-  
-//  var usersArray = [User]()
-//  for userDict in users
-//  {
-//    let user = User()
-//    user.getUserFrom(userDictionary: userDict.dictionary!)
-//    usersArray.append(user)
-//  }
-//  projectToUpdate.users = usersArray
   projectToUpdate.user1Id = user1Id
   projectToUpdate.user2Id = user2Id
   

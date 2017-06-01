@@ -16,7 +16,6 @@ class Project: SQLiteStORM
 {
   var id: Int = 0
   var projectName: String = ""
-//  var _users = [User]()
   var user1Id: Int = 0
   var user2Id: Int = 0
   var _lines = [Int]()
@@ -47,7 +46,6 @@ class Project: SQLiteStORM
     return [
       "id": self.id,
       "projectName": self.projectName,
-//      "users": self.users,
       "user1Id": self.user1Id,
       "user2Id": self.user2Id,
       "lines": self._lines
@@ -62,7 +60,6 @@ class Project: SQLiteStORM
     let allLines = lines.rows()
     for line in allLines
     {
-//      line with project .id
       if line.projectId == self.id
       {
         lineIds.append(line.id)
@@ -70,11 +67,5 @@ class Project: SQLiteStORM
     }
     return lineIds
   }
-  
-//  public func getUsers() -> [User]
-//  {
-//    let users = User()
-//    return users.rows()
-//  }
 }
 
