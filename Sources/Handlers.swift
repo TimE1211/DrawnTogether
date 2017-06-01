@@ -26,7 +26,7 @@ func test(request: HTTPRequest, response: HTTPResponse)
     
     let testProject = Project()
     try testProject.findAll()
-    let projects = testProject.rows().map{ $0.asDictionary()}
+    let projects = testProject.rows().map{ $0.asDictionary() }
     try response.setBody(json: projects)
       .setHeader(.contentType, value: "application/json")
       .completed()
@@ -146,7 +146,7 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
   
   do {
     try aProject.findAll()
-    let projects = aProject.rows().map{ $0.asDictionary()}
+    let projects = aProject.rows().map{ $0.asDictionary() }
     try response.setBody(json: projects)
       .setHeader(.contentType, value: "application/json")
       .completed()
@@ -166,7 +166,7 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
   
   do {
     try aUser.findAll()
-    let users = aUser.rows().map{ $0.asDictionary()}
+    let users = aUser.rows().map{ $0.asDictionary() }
     print(users)
     try response.setBody(json: users)
       .setHeader(.contentType, value: "application/json")
@@ -208,7 +208,7 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
     return
   }
   
-  var linesArray = [Int]()
+  var linesArray = [Line]()
   for lineDict in lines
   {
     let line = Line()
@@ -227,7 +227,7 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
       print("Updating Line in project Error: \(error)")
       responseDictionary["error"] = String(describing: error)
     }
-    linesArray.append(line.id)
+    linesArray.append(line)
   }
 
   

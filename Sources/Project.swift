@@ -18,7 +18,7 @@ class Project: SQLiteStORM
   var projectName: String = ""
   var user1Id: Int = 0
   var user2Id: Int = 0
-  var _lines = [Int]()
+  var _lines = [Line]()
   
   override func to(_ this: StORMRow)
   {
@@ -26,7 +26,7 @@ class Project: SQLiteStORM
     projectName = this.data["projectName"] as? String ?? ""
     user1Id = this.data["user1Id"] as? Int ?? 0
     user2Id = this.data["user1Id"] as? Int ?? 0
-    _lines = getLineIds()
+    _lines = getLines()
   }
   
   func rows() -> [Project]
@@ -48,30 +48,21 @@ class Project: SQLiteStORM
       "projectName": self.projectName,
       "user1Id": self.user1Id,
       "user2Id": self.user2Id,
-      "lines": self._lines
+      "lines": self._lines.map { $0.asDictionary() }
     ]
   }
   
-  public func getLineIds() -> [Int]
+  public func getLines() -> [Line]
   {
-    let aLine = Line()
-    var lineIds = [Int]()
+    let lines = Line()
     
     do {
-      try aLine.findAll()
-      let allLines = aLine.rows()
-      for line in allLines
-      {
-        if line.projectId == self.id
-        {
-          let thisProjectsLine = line
-          lineIds.append(thisProjectsLine.id)
-        }
-      }
+      try lines.select(whereclause: "projectId = :\(id)", params: [id], orderby: ["id"])
     } catch {
-      print("Couldnt find all Lines: \(error)")
+      print("line get error: \(error)")
     }
-    return lineIds
+    
+    return lines.rows()
   }
 }
 
