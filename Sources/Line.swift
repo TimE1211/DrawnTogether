@@ -48,13 +48,13 @@ class Line: SQLiteStORM
   
   func getLineFrom(lineDictionary: JSON)      //make line obj from json request
   {
-    projectId = (lineDictionary["projectId"].int) ?? 0
-    startx = (lineDictionary["startx"].string) ?? ""
-    starty = (lineDictionary["starty"].string) ?? ""
-    endx = (lineDictionary["endx"].string) ?? ""
-    endy = (lineDictionary["endy"].string) ?? ""
-    color = (lineDictionary["color"].string) ?? ""
-    thickness = (lineDictionary["thickness"].string) ?? ""
+    projectId = lineDictionary["projectId"].intValue
+    startx = lineDictionary["startx"].stringValue
+    starty = lineDictionary["starty"].stringValue
+    endx = lineDictionary["endx"].stringValue
+    endy = lineDictionary["endy"].stringValue
+    color = lineDictionary["color"].stringValue
+    thickness = lineDictionary["thickness"].stringValue
   }
 
   func asDictionary() -> [String: Any]        //as dict from storm
