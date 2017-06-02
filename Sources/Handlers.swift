@@ -207,6 +207,8 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
     line.getLineFrom(lineDictionary: lineDict)
     do
     {
+      //something is going wrong here maybe .. After first line saved no lines are displayed but the first
+      //also i think lines are being saved more than once
       try line.save(set: { id in
         line.id = id as! Int
       })
