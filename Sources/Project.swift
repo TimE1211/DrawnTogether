@@ -29,6 +29,19 @@ class Project: SQLiteStORM
     lines = getLines()
   }
   
+  public func getLines() -> [Line]
+  {
+    let projectsLines = Line()
+    
+    do {
+      try projectsLines.select(whereclause: "projectId = :1", params: [id], orderby: ["id"])
+    } catch {
+      print("line get error: \(error)")
+    }
+    
+    return projectsLines.rows()
+  }
+  
   func rows() -> [Project]
   {
     var projects = [Project]()
@@ -50,19 +63,6 @@ class Project: SQLiteStORM
       "user2Id": self.user2Id,
       "lines": self.lines.map { $0.asDictionary() }
     ]
-  }
-  
-  public func getLines() -> [Line]
-  {
-    let projectsLines = Line()
-    
-    do {
-      try projectsLines.select(whereclause: "projectId = :1", params: [id], orderby: ["id"])
-    } catch {
-      print("line get error: \(error)")
-    }
-    
-    return projectsLines.rows()
   }
 }
 

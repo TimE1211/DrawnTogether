@@ -12,32 +12,6 @@ import StORM
 import Foundation
 import SwiftyJSON
 
-func test(request: HTTPRequest, response: HTTPResponse)
-{
-  do {
-    let project1 = Project()
-    project1.projectName = "Joe"
-    project1.lines = []
-    project1.user1Id = 1
-    project1.user2Id = 0
-    try project1.save() { id in
-      project1.id = id as! Int
-    }
-    
-    let testProject = Project()
-    try testProject.findAll()
-    let projects = testProject.rows().map{ $0.asDictionary() }
-    try response.setBody(json: projects)
-      .setHeader(.contentType, value: "application/json")
-      .completed()
-  } catch
-  {
-    print("Couldnt set response Body for projects: \(error)")
-    response.setBody(string: "Couldnt get responseDictionary: \(error)")
-      .completed(status: .internalServerError)
-  }
-}
-
 func createProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
@@ -225,7 +199,6 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
     response.completed()
     return
   }
-  print(lines)
   
   var linesArray = [Line]()
   for lineDict in lines
@@ -234,9 +207,9 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
     line.getLineFrom(lineDictionary: lineDict)
     do
     {
-      try line.save() { id in
+      try line.save(set: { id in
         line.id = id as! Int
-      }
+      })
       responseDictionary["error"] = "Line saved."
       print(responseDictionary["error"]!)
     }

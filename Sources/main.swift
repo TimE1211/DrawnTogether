@@ -30,7 +30,6 @@ routes.add(method: .post, uri: "/updateProject", handler: updateProject)
 routes.add(method: .post, uri: "/saveUser", handler: saveUser)
 routes.add(method: .get, uri: "/getProjects", handler: getProjects)
 routes.add(method: .get, uri: "/getUsers", handler: getUsers)
-routes.add(method: .get, uri: "/test", handler: test)
 
 server.addRoutes(routes)
 
