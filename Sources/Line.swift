@@ -46,15 +46,15 @@ class Line: SQLiteStORM
     return lines
   }
   
-  func getLineFrom(lineDictionary: [String: JSON])      //make line obj from json request
+  func getLineFrom(lineDictionary: JSON)      //make line obj from json request
   {
-    projectId = (lineDictionary["projectId"]?.int)!
-    startx = (lineDictionary["startx"]?.string)!
-    starty = (lineDictionary["starty"]?.string)!
-    endx = (lineDictionary["endx"]?.string)!
-    endy = (lineDictionary["endy"]?.string)!
-    color = (lineDictionary["color"]?.string)!
-    thickness = (lineDictionary["thickness"]?.string)!
+    projectId = (lineDictionary["projectId"].int) ?? 0
+    startx = (lineDictionary["startx"].string) ?? ""
+    starty = (lineDictionary["starty"].string) ?? ""
+    endx = (lineDictionary["endx"].string) ?? ""
+    endy = (lineDictionary["endy"].string) ?? ""
+    color = (lineDictionary["color"].string) ?? ""
+    thickness = (lineDictionary["thickness"].string) ?? ""
   }
 
   func asDictionary() -> [String: Any]        //as dict from storm

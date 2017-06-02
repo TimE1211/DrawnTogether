@@ -17,7 +17,7 @@ func test(request: HTTPRequest, response: HTTPResponse)
   do {
     let project1 = Project()
     project1.projectName = "Joe"
-    project1._lines = []
+    project1.lines = []
     project1.user1Id = 1
     project1.user2Id = 0
     try project1.save() { id in
@@ -72,15 +72,19 @@ func createProject(request: HTTPRequest, _ response: HTTPResponse)
   aProject.projectName = projectName
   aProject.user1Id = user1Id
   aProject.user2Id = user2Id
-  aProject._lines = []
+  aProject.lines = []
   
   do {
     try aProject.save() { id in
       aProject.id = id as! Int
     }
     responseDictionary["error"] = "Project saved."
+    
+    for (key, value) in aProject.asDictionary()
+    {
+      responseDictionary[key] = "\(value)"
+    }
     print(responseDictionary["error"]!)
-    responseDictionary["projectId"] = "\(aProject.id)"
   } catch
   {
     responseDictionary["error"] = "Project could not be saved: \(error)"
@@ -103,10 +107,12 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
   response.setHeader(.contentType, value: "application/json")
   var responseDictionary = [String: String]()
   
+  print(request.postBodyString ?? "no params")
+  
   guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
   let json = JSON(data: dataFromString)
   
-  print(json)
+  print(dataFromString)
   
   guard let username = json["username"].string,
     let password = json["password"].string else
@@ -132,8 +138,11 @@ func saveUser(request: HTTPRequest, _ response: HTTPResponse)
       aUser.id = id as! Int
     }
     responseDictionary["error"] = "User saved."
-    print("responseDict: \(responseDictionary["error"] ?? "user saved")")
-    responseDictionary["userId"] = "\(aUser.id)"
+    
+    for (key, value) in aUser.asDictionary()
+    {
+      responseDictionary[key] = "\(value)"
+    }
   } catch
   {
     responseDictionary["error"] = "Couldn't save User \(error)."
@@ -179,7 +188,6 @@ func getUsers(request: HTTPRequest, _ response: HTTPResponse)
   do {
     try aUser.findAll()
     let users = aUser.rows().map{ $0.asDictionary() }
-    print(users)
     try response.setBody(json: users)
       .setHeader(.contentType, value: "application/json")
       .completed()
@@ -199,8 +207,6 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
   guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
   let json = JSON(data: dataFromString)
   
-  print(json)
-  
   guard let id = json["id"].int,
     let projectName = json["projectName"].string,
     let user1Id = json["user1Id"].int,
@@ -219,17 +225,17 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
     response.completed()
     return
   }
+  print(lines)
   
   var linesArray = [Line]()
   for lineDict in lines
   {
     let line = Line()
-    line.getLineFrom(lineDictionary: lineDict.dictionary!)
+    line.getLineFrom(lineDictionary: lineDict)
     do
     {
       try line.save() { id in
         line.id = id as! Int
-        print(line.id)
       }
       responseDictionary["error"] = "Line saved."
       print(responseDictionary["error"]!)
@@ -249,7 +255,7 @@ func updateProject(request: HTTPRequest, _ response: HTTPResponse)
   projectToUpdate.projectName = projectName
   projectToUpdate.user1Id = user1Id
   projectToUpdate.user2Id = user2Id
-  projectToUpdate._lines = linesArray
+  projectToUpdate.lines = linesArray
 
   do {
     try projectToUpdate.save(set: { _ in
