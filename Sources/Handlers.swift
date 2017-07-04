@@ -153,6 +153,26 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
   }
 }
 
+func getAProject(request: HTTPRequest, _ response: HTTPResponse)
+{
+  response.setHeader(.contentType, value: "application/json")
+  
+  let aProject = Project()
+  
+  do {
+    try aProject.findAll()
+    let projects = aProject.rows().map{ $0.asDictionary() }
+    try response.setBody(json: projects)
+      .setHeader(.contentType, value: "application/json")
+      .completed()
+  } catch
+  {
+    print("Couldnt set response Body for projects: \(error)")
+    response.setBody(string: "Couldnt get responseDictionary: \(error)")
+      .completed(status: .internalServerError)
+  }
+}
+
 func getUsers(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
