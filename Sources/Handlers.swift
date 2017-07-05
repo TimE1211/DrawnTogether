@@ -156,13 +156,34 @@ func getProjects(request: HTTPRequest, _ response: HTTPResponse)
 func getAProject(request: HTTPRequest, _ response: HTTPResponse)
 {
   response.setHeader(.contentType, value: "application/json")
-  
+  var responseDictionary = [String: String]()
+
+  guard let dataFromString = request.postBodyString?.data(using: .utf8, allowLossyConversion: false) else { return }
+  let json = JSON(data: dataFromString)
+
+  print(json)
+
+  guard let projectId = json["id"].int else
+  {
+    response.status = .badRequest
+    responseDictionary["error"] = "Please supply the project id"
+    print(responseDictionary["error"]!)
+    do {
+      try response.setBody(json: responseDictionary)
+    }catch
+    {
+      print("Project JSON submission Error: \(error)")
+    }
+    response.completed()
+    return
+  }
+
   let aProject = Project()
-  
+
   do {
-    try aProject.findAll()
-    let projects = aProject.rows().map{ $0.asDictionary() }
-    try response.setBody(json: projects)
+    try aProject.get(projectId)
+    let project = aProject.rows().map{ $0.asDictionary() }
+    try response.setBody(json: project)
       .setHeader(.contentType, value: "application/json")
       .completed()
   } catch
